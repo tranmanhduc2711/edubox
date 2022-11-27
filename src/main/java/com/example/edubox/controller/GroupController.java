@@ -1,0 +1,57 @@
+package com.example.edubox.controller;
+
+import com.example.edubox.controller.base.BaseController;
+import com.example.edubox.model.req.CreateGroupReq;
+import com.example.edubox.model.req.JoinGroupReq;
+import com.example.edubox.model.req.RoleAssignmentReq;
+import com.example.edubox.service.GroupService;
+import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+
+@RestController
+@RequestMapping(value = "/group-management")
+@AllArgsConstructor
+public class GroupController extends BaseController {
+    private final GroupService groupService;
+
+    @PostMapping()
+    public ResponseEntity<?> createGroup(@RequestBody @Valid CreateGroupReq createGroupReq) {
+        return success(groupService.createGroup(createGroupReq));
+    }
+    @GetMapping("/detail")
+    public ResponseEntity<?> getGroups() {
+        return success(groupService.getGroups());
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getGroupDetail(@RequestParam(value = "groupCode",required = true) String groupCode) {
+        return success(groupService.getGroupDetail(groupCode));
+    }
+
+    @GetMapping("/member")
+    public ResponseEntity<?> getGroupMembers(@RequestParam(value = "code", required = true) String code) {
+        return success(groupService.getGroupMembers(code));
+    }
+
+    @GetMapping("/created-by")
+    public ResponseEntity<?> getGroupsCreatedBy(@RequestParam(value = "userCode", required = true) String code) {
+        return success(groupService.getGroupMembers(code));
+    }
+    @PostMapping("/assign")
+    public ResponseEntity<?> assignRole(@RequestBody RoleAssignmentReq roleAssignmentReq) {
+        return success(groupService.assignMemberRole(roleAssignmentReq));
+    }
+    @PostMapping("/join-group")
+    public ResponseEntity<?> addMemberToGroup(@RequestBody JoinGroupReq joinGroupReq) {
+        return success(groupService.assignToGroup(joinGroupReq.getGroupCode(), joinGroupReq.getUserCode()));
+    }
+
+}
