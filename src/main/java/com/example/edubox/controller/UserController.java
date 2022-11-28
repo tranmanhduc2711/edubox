@@ -19,13 +19,13 @@ public class UserController extends BaseController {
     private final GroupMemberService groupMemberService;
 
     @GetMapping
-    ResponseEntity<?> getUser(@RequestParam(value = "code",required = true) String code) {
-        UserRes user = UserRes.valueOf(userService.findByUsername(code));
+    ResponseEntity<?> getUser(@RequestParam(value = "userCode",required = true) String code) {
+        UserRes user = UserRes.valueOf(userService.findByCode(code));
         return success(user);
     }
 
     @GetMapping(value = "/groups")
-    ResponseEntity<?> getUserGroup(@RequestParam(value = "code",required = true) String code) {
+    ResponseEntity<?> getUserGroup(@RequestParam(value = "userCode",required = true) String code) {
         return success(groupMemberService.getGroupsByUserCode(code));
     }
 

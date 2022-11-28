@@ -44,6 +44,8 @@ public class GroupServiceImpl implements GroupService {
         group.setGroupName(createGroupReq.getName());
         group.setGroupCode(buildGroupCode());
         group.setDescription(createGroupReq.getDescription());
+        group.setStatus(ECommonStatus.ACTIVE);
+        group.setCapacity(createGroupReq.getCapacity());
         groupRepository.save(group);
 
         User user = userService.findByCode(createGroupReq.getOwnerCode());
@@ -52,6 +54,7 @@ public class GroupServiceImpl implements GroupService {
         groupMember.setGroup(group);
         groupMember.setRoleType(ERoleType.OWNER);
         groupMember.setStatus(ECommonStatus.ACTIVE);
+        groupMemberRepository.save(groupMember);
         return GroupRes.valueOf(group,UserRes.valueOf(user));
     }
 
@@ -97,13 +100,8 @@ public class GroupServiceImpl implements GroupService {
             throw new BusinessException(ErrorCode.GROUP_IS_INACTIVE,"Group is inactive");
         }
 
-        Optional<User> member = groupMemberRepository.findMember(roleAssignmentReq.getGroupCode(),roleAssignmentReq.getUserCode());
-        if(member.isEmpty()) {
-            throw new BusinessException(ErrorCode.USER_NOT_FOUND,"Member not found");
-        } else if(ECommonStatus.INACTIVE.equals(group.get().getStatus())) {
-            throw new BusinessException(ErrorCode.USER_IS_INACTIVE,"Member is inactive");
-        }
-        List<GroupMember> groupMembers = groupMemberRepository.findAllByUserAndStatus(member.get(),ECommonStatus.ACTIVE);
+        User user = userService.findByCode(roleAssignmentReq.getUserCode());
+        List<GroupMember> groupMembers = groupMemberRepository.findAllByUserAndStatusAndGroup(user,ECommonStatus.ACTIVE,group.get());
 
         for(GroupMember gr : groupMembers) {
             gr.setStatus(ECommonStatus.INACTIVE);
@@ -111,7 +109,7 @@ public class GroupServiceImpl implements GroupService {
         }
         GroupMember groupMember = new GroupMember();
         groupMember.setGroup(group.get());
-        groupMember.setUser(member.get());
+        groupMember.setUser(user);
         groupMember.setRoleType(roleAssignmentReq.getRoleType());
         groupMember.setStatus(ECommonStatus.ACTIVE);
         return  groupMemberRepository.save(groupMember);

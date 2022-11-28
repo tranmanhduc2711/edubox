@@ -2,6 +2,7 @@ package com.example.edubox.entity;
 
 import com.example.edubox.constant.ECommonStatus;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -11,12 +12,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
-@Entity
-@Table(name = "group")
 @Setter
 @Getter
-public class  Group {
+@Entity
+@Table(name = "edu_group")
+@NoArgsConstructor
+public class  Group implements Serializable {
+    private static final long serialVersionUID = 3056572664881306837L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -27,7 +32,7 @@ public class  Group {
     @Column(name = "group_code")
     private String groupCode;
 
-    @Column(name = "description")
+    @Column(name = "group_description")
     private String description;
 
     @Column(name = "capacity")

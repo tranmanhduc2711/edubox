@@ -54,5 +54,5 @@ public class User implements Serializable {
 
     @Column(name = "status")
     @Convert(converter = ECommonStatus.Converter.class)
-    private ECommonStatus status;
+    private ECommonStatus status = ECommonStatus.ACTIVE;
 }
