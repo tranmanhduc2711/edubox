@@ -23,7 +23,7 @@ public class Sequence {
     private String seqName;
 
     @Column(name = "cur_val")
-    private int curVal;
+    private Integer curVal;
 
     public void incr(int val) {
         this.curVal += val;

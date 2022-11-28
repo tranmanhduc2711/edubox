@@ -3,6 +3,7 @@ package com.example.edubox.security.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.edubox.constant.ErrorCode;
 import com.example.edubox.support.web.BaseResponseData;
@@ -38,15 +39,15 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         }
         String authorizationHeader = req.getHeader(AUTHORIZATION);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring("Bearer ".length());
-            Algorithm algorithm = Algorithm.HMAC512("secret".getBytes());
-            JWTVerifier verifier = JWT.require(algorithm).build();
-            DecodedJWT decodedJWT = verifier.verify(token);
-            String username = decodedJWT.getSubject();
-            UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            chain.doFilter(req, res);
+                String token = authorizationHeader.substring("Bearer ".length());
+                Algorithm algorithm = Algorithm.HMAC512("secret".getBytes());
+                JWTVerifier verifier = JWT.require(algorithm).build();
+                DecodedJWT decodedJWT = verifier.verify(token);
+                String username = decodedJWT.getSubject();
+                UsernamePasswordAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                chain.doFilter(req, res);
         } else {
             sendError(res, "Access denied");
             return;

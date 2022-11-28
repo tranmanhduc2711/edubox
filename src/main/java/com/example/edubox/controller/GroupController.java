@@ -26,24 +26,24 @@ public class GroupController extends BaseController {
     public ResponseEntity<?> createGroup(@RequestBody @Valid CreateGroupReq createGroupReq) {
         return success(groupService.createGroup(createGroupReq));
     }
-    @GetMapping("/detail")
+    @GetMapping("")
     public ResponseEntity<?> getGroups() {
         return success(groupService.getGroups());
     }
 
-    @GetMapping
+    @GetMapping("/detail")
     public ResponseEntity<?> getGroupDetail(@RequestParam(value = "groupCode",required = true) String groupCode) {
         return success(groupService.getGroupDetail(groupCode));
     }
 
     @GetMapping("/member")
-    public ResponseEntity<?> getGroupMembers(@RequestParam(value = "code", required = true) String code) {
+    public ResponseEntity<?> getGroupMembers(@RequestParam(value = "groupCode", required = true) String code) {
         return success(groupService.getGroupMembers(code));
     }
 
     @GetMapping("/created-by")
     public ResponseEntity<?> getGroupsCreatedBy(@RequestParam(value = "userCode", required = true) String code) {
-        return success(groupService.getGroupMembers(code));
+        return success(groupService.getGroupsCreatedByUser(code));
     }
     @PostMapping("/assign")
     public ResponseEntity<?> assignRole(@RequestBody RoleAssignmentReq roleAssignmentReq) {

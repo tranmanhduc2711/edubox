@@ -2,15 +2,11 @@ package com.example.edubox.model.res;
 
 import com.example.edubox.constant.ECommonStatus;
 import com.example.edubox.entity.Group;
-import com.example.edubox.entity.User;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Setter
 @Getter
