@@ -28,6 +28,7 @@ public class InvitationController extends BaseController {
             @RequestParam(value = "groupCode",required = true) String groupCode,
             @RequestParam(value = "email",required = true) String email
     ) {
+        invitationService.
         return null;
     }
 }

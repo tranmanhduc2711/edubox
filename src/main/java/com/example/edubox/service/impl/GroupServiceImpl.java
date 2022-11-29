@@ -93,22 +93,17 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional
     public GroupMember assignMemberRole(RoleAssignmentReq roleAssignmentReq) {
-        Optional<Group> group = groupRepository.findByGroupCode(roleAssignmentReq.getGroupCode());
-        if(group.isEmpty()) {
-            throw new BusinessException(ErrorCode.GROUP_CODE_NOT_FOUND,"Group not found");
-        } else if(ECommonStatus.INACTIVE.equals(group.get().getStatus())) {
-            throw new BusinessException(ErrorCode.GROUP_IS_INACTIVE,"Group is inactive");
-        }
+        Group group =findActiveGroup(roleAssignmentReq.getGroupCode());
 
         User user = userService.findByCode(roleAssignmentReq.getUserCode());
-        List<GroupMember> groupMembers = groupMemberRepository.findAllByUserAndStatusAndGroup(user,ECommonStatus.ACTIVE,group.get());
+        List<GroupMember> groupMembers = groupMemberRepository.findAllByUserAndStatusAndGroup(user,ECommonStatus.ACTIVE,group);
 
         for(GroupMember gr : groupMembers) {
             gr.setStatus(ECommonStatus.INACTIVE);
             groupMemberRepository.save(gr);
         }
         GroupMember groupMember = new GroupMember();
-        groupMember.setGroup(group.get());
+        groupMember.setGroup(group);
         groupMember.setUser(user);
         groupMember.setRoleType(roleAssignmentReq.getRoleType());
         groupMember.setStatus(ECommonStatus.ACTIVE);
@@ -135,6 +130,9 @@ public class GroupServiceImpl implements GroupService {
         if(member.isPresent()) {
             throw new BusinessException(ErrorCode.USER_IS_ALREADY_IN_GROUP,"User is already in group");
         }
+        group.incr(1);
+        groupRepository.save(group);
+
         GroupMember groupMember = new GroupMember();
         groupMember.setGroup(group);
         groupMember.setUser(user);

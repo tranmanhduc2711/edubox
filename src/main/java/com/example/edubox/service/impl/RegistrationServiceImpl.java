@@ -5,6 +5,7 @@ import com.example.edubox.entity.User;
 import com.example.edubox.entity.VerificationToken;
 import com.example.edubox.exception.BusinessException;
 import com.example.edubox.model.req.CreateUserReq;
+import com.example.edubox.model.res.UserRes;
 import com.example.edubox.service.RegistrationService;
 import com.example.edubox.service.UserService;
 import lombok.AllArgsConstructor;
@@ -34,9 +35,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     @Transactional
-    public User register(CreateUserReq createUserReq) {
+    public UserRes register(CreateUserReq createUserReq) {
         User user = userService.createUser(createUserReq);
         eventPublisher.publishEvent(user);
-        return user;
+        return UserRes.valueOf(user);
     }
 }

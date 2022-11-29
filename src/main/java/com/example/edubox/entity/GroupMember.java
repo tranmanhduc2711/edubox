@@ -15,12 +15,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "group_member")
 @Setter
 @Getter
-public class GroupMember {
+public class GroupMember implements Serializable {
+    private static final long serialVersionUID = -3954715431625404177L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

@@ -1,5 +1,5 @@
 package com.example.edubox.service;
 
 public interface InvitationService {
-    String getGroupInvitation(String groupCode);
+    void sendInvitationMail(String groupCode,String email);
 }

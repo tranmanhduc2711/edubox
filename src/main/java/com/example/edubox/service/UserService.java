@@ -3,12 +3,15 @@ package com.example.edubox.service;
 import com.example.edubox.entity.User;
 import com.example.edubox.entity.VerificationToken;
 import com.example.edubox.model.req.CreateUserReq;
+import com.example.edubox.model.req.UpdateUserReq;
+import com.example.edubox.model.res.UserRes;
 
 import java.util.Optional;
 
 public interface UserService {
     User saveUser(User user);
     User createUser(CreateUserReq createUserReq);
+    UserRes updateUser(UpdateUserReq updateUserReq);
     User getUser(User user);
     User findByUsername(String username);
     Optional<User> findByEmail(String email);

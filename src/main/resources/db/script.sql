@@ -16,17 +16,17 @@ CREATE TABLE `user` (
     `status` varchar(64),
 
     PRIMARY KEY(id)
-)ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-CREATE TABLE `group` (
-    `id` int AUTO_INCREMENT,
-    `group_name` varchar(255) NOT NULL,
-    `group_code` varchar(255) unique NOT NULL,
-    `description` varchar(255),
-    `capacity` int,
-    `status` varchar(64),
+)ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE `edu_group` (
+     `id` int AUTO_INCREMENT,
+     `group_name` varchar(255) NOT NULL,
+     `group_code` varchar(255) unique NOT NULL,
+     `group_description` varchar(255) NULL,
+     `capacity` int,
+     `status` varchar(64),
 
-    PRIMARY KEY(id)
-)ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+     PRIMARY KEY(id)
+)ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 CREATE TABLE `group_member` (
     `id` int AUTO_INCREMENT,
     `group_id` int,
@@ -36,32 +36,31 @@ CREATE TABLE `group_member` (
 
     PRIMARY KEY(id),
     CONSTRAINT fk_gr_member_user  FOREIGN KEY (user_id) REFERENCES `user`(id),
-    CONSTRAINT fk_gr_member_group FOREIGN KEY  (group_id) REFERENCES `group`(id)
+    CONSTRAINT fk_gr_member_group FOREIGN KEY  (group_id) REFERENCES `edu_group`(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `verification_token` (
-    `id` int NOT NULL AUTO_INCREMENT,
-    `token` varchar(1000)  NULL,
-    `user_id` int,
-    `expiry_date` timestamp,
+      `id` int NOT NULL AUTO_INCREMENT,
+      `token` varchar(1000)  NULL,
+      `user_id` int,
+      `expiry_date` timestamp,
 
-    PRIMARY KEY(id),
-    CONSTRAINT fk_token_user  FOREIGN KEY (user_id) REFERENCES `user`(id)
-)ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+      PRIMARY KEY(id),
+      CONSTRAINT fk_token_user  FOREIGN KEY (user_id) REFERENCES `user`(id)
+)ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 CREATE TABLE `seq_next` (
-    `seq_name` varchar(50) NOT NULL,
-    `cur_val` int(11) unsigned NOT NULL,
-    PRIMARY KEY (`seq_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+        `seq_name` varchar(50) NOT NULL,
+        `cur_val` int(11) unsigned NOT NULL,
+        PRIMARY KEY (`seq_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE PROCEDURE `seqNext`(IN seqName varchar(100),  OUT nextVal int)
 begin
-START TRANSACTION;
-INSERT INTO seq_next(seq_name, cur_val) values(seqName, 1)
-    on duplicate key UPDATE  cur_val = cur_val + 1;
-SELECT cur_val INTO nextVal FROM seq_next WHERE seq_name = seqName;
-COMMIT;
+    START TRANSACTION;
+        INSERT INTO seq_next(seq_name, cur_val) values(seqName, 1)
+            on duplicate key UPDATE  cur_val = cur_val + 1;
+        SELECT cur_val INTO nextVal FROM seq_next WHERE seq_name = seqName;
+    COMMIT;
 end
-

@@ -17,6 +17,7 @@ public class GroupRes {
     private String name;
     private String code;
     private String description;
+    private Integer capacity;
     private ECommonStatus status;
     private UserRes owner;
 
@@ -25,6 +26,7 @@ public class GroupRes {
                 .code(group.getGroupCode())
                 .name(group.getGroupName())
                 .description(group.getDescription())
+                .capacity(group.getCapacity())
                 .status(group.getStatus())
                 .owner(owner)
                 .build();
