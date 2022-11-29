@@ -1,12 +1,16 @@
 package com.example.edubox.support.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ResponseSupport {
+    @Autowired
+    Translator translator;
 
     public Meta createMeta(int code) {
-        return Meta.instance(code,null);
+        String message = translator.toLocale(code);
+        return Meta.instance(code,message);
     }
 
     public BaseResponseData errorResponse(int code,String message) {

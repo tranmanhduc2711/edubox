@@ -6,6 +6,8 @@ import com.example.edubox.entity.User;
 import com.example.edubox.entity.VerificationToken;
 import com.example.edubox.exception.BusinessException;
 import com.example.edubox.model.req.CreateUserReq;
+import com.example.edubox.model.req.UpdateUserReq;
+import com.example.edubox.model.res.UserRes;
 import com.example.edubox.repository.TokenRepository;
 import com.example.edubox.repository.UserRepository;
 import com.example.edubox.service.SequenceService;
@@ -64,6 +66,26 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setStatus(ECommonStatus.ACTIVE);
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public UserRes updateUser(UpdateUserReq updateUserReq) {
+        Optional<User> userRecord = userRepository.findByCode(updateUserReq.getCode());
+        if(userRecord.isEmpty()) {
+            throw new BusinessException(ErrorCode.USER_NOT_FOUND,"User not found");
+        }
+        if(ECommonStatus.INACTIVE.equals(userRecord.get().getStatus())) {
+            throw new BusinessException(ErrorCode.USER_IS_INACTIVE,"User is inactive");
+        }
+        User user = userRecord.get();
+        user.setFullName(updateUserReq.getFullName());
+        user.setGender(updateUserReq.getGender());
+        user.setAge(updateUserReq.getAge());
+        user.setPassword(passwordEncoder.encode(updateUserReq.getPassword()));
+        user.setRole(updateUserReq.getRole());
+        user.setStatus(updateUserReq.getStatus());
+        userRepository.save(user);
+        return UserRes.valueOf(user);
     }
 
     @Override

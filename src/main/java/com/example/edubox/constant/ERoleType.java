@@ -15,6 +15,7 @@ public enum ERoleType implements PersistentEnum<String> {
 
     MEMBER("MEMBER","Member"),
     OWNER("OWNER","Owner"),
+    CO_OWNER("CO_OWNER","CO-Owner"),
     KICK_OUT("KICK_OUT","Kick out");
 
     private static final Map<String, ERoleType> mapByValue;

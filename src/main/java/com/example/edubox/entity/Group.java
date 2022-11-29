@@ -41,4 +41,8 @@ public class  Group implements Serializable {
     @Column(name = "status")
     @Convert(converter = ECommonStatus.Converter.class)
     private ECommonStatus status;
+
+    public void incr(int val) {
+        this.capacity += val;
+    }
 }
