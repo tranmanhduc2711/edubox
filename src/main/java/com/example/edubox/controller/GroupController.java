@@ -45,13 +45,21 @@ public class GroupController extends BaseController {
     public ResponseEntity<?> getGroupsCreatedBy(@RequestParam(value = "userCode", required = true) String code) {
         return success(groupService.getGroupsCreatedByUser(code));
     }
+
     @PostMapping("/assign")
-    public ResponseEntity<?> assignRole(@RequestBody RoleAssignmentReq roleAssignmentReq) {
-        return success(groupService.assignMemberRole(roleAssignmentReq));
+    public Boolean assignRole(@RequestBody RoleAssignmentReq roleAssignmentReq) {
+        return groupService.assignMemberRole(roleAssignmentReq);
     }
-    @PostMapping("/join-group")
-    public ResponseEntity<?> addMemberToGroup(@RequestBody JoinGroupReq joinGroupReq) {
-        return success(groupService.assignToGroup(joinGroupReq.getGroupCode(), joinGroupReq.getUserCode()));
+
+    @PostMapping("/add")
+    public Boolean addMemberToGroup(@RequestBody JoinGroupReq joinGroupReq) {
+        groupService.assignToGroup(joinGroupReq);
+        return true;
+    }
+
+    @PostMapping("/join")
+    public String joinByLink(@RequestBody JoinGroupReq joinGroupReq) {
+        return groupService.joinByLink(joinGroupReq);
     }
 
 }
