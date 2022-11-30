@@ -18,15 +18,18 @@ public class UserRes {
     private EGender gender;
     private Integer age;
     private String role;
+    private String code;
     private ECommonStatus status;
 
     public static UserRes valueOf(User user) {
+        if(user == null) return null;
         return UserRes.builder()
                 .fullName(user.getFullName())
                 .email(user.getEmail())
                 .gender(user.getGender())
                 .age(user.getAge())
                 .role(user.getRole())
+                .code(user.getCode())
                 .status(user.getStatus())
                 .build();
     }

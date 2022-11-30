@@ -1,5 +1,7 @@
 package com.example.edubox.model.req;
 
+import com.example.edubox.constant.ERoleType;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,5 +9,6 @@ import lombok.Setter;
 @Getter
 public class JoinGroupReq {
     private String groupCode;
-    private String userCode;
+    private String email;
+    private ERoleType roleType;
 }

@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (user == null) {
             throw new BusinessException(ErrorCode.USER_NOT_FOUND, "User not found");
         }
-        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>(   );
 
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
     }
@@ -54,6 +54,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User createUser(CreateUserReq createUserReq) {
+        User userRecord = userRepository.findByUsername(createUserReq.getUsername());
+        if(userRecord != null) {
+            throw  new BusinessException(ErrorCode.EMAIL_IS_USED,"Email is already used");
+        }
         User user = new User();
         user.setUsername(createUserReq.getUsername());
         user.setPassword(passwordEncoder.encode(createUserReq.getPassword()));
