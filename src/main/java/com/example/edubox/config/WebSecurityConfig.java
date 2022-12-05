@@ -18,7 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
     @Autowired
     private JWTAuthorizationFilter jwtAuthorizationFilter;
 
@@ -32,6 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter(authenticationManagerBean());
@@ -39,12 +39,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeRequests().antMatchers("/**/login","/**/health","/**/registration/**").permitAll()
+                .authorizeRequests().antMatchers("/**/login", "/**/health", "/**/registration/**").permitAll()
                 .and()
                 .authorizeRequests().anyRequest().authenticated()
                 .and()
                 .addFilter(jwtAuthenticationFilter)
-                .addFilterBefore(jwtAuthorizationFilter,UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override

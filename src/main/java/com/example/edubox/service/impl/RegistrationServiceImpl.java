@@ -19,14 +19,15 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final UserService userService;
 
     private final ApplicationEventPublisher eventPublisher;
+
     @Override
     public String confirmToken(String token) {
         VerificationToken verificationToken =
-                userService.getVerificationToken(token).orElseThrow(() ->new IllegalStateException("token not found"));
+                userService.getVerificationToken(token).orElseThrow(() -> new IllegalStateException("token not found"));
 
         User user = verificationToken.getUser();
-        if(user.getIsEnabled().equals(Boolean.TRUE)) {
-            throw new BusinessException(ErrorCode.TOKEN_IS_ALREADY_CONFIRM,"Token is already confirmed");
+        if (user.getIsEnabled().equals(Boolean.TRUE)) {
+            throw new BusinessException(ErrorCode.TOKEN_IS_ALREADY_CONFIRM, "Token is already confirmed");
         }
         user.setIsEnabled(true);
         userService.saveUser(user);

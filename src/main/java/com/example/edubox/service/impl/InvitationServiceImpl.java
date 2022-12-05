@@ -27,6 +27,6 @@ public class InvitationServiceImpl implements InvitationService {
     @Override
     public void sendInvitationMail(String groupCode, String email) {
         Group group = groupService.findActiveGroup(groupCode);
-        mailService.sendMail(groupCode,email);
+        mailService.sendMail(groupCode, email);
     }
 }

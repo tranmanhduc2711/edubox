@@ -54,7 +54,7 @@ public class GroupServiceImpl implements GroupService {
         group.setCapacity(createGroupReq.getCapacity());
         groupRepository.save(group);
 
-        String principal =(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByUsername(principal);
         GroupMember groupMember = new GroupMember();
         groupMember.setUser(user);
@@ -62,39 +62,39 @@ public class GroupServiceImpl implements GroupService {
         groupMember.setRoleType(ERoleType.OWNER);
         groupMember.setStatus(ECommonStatus.ACTIVE);
         groupMemberRepository.save(groupMember);
-        return GroupRes.valueOf(group,UserRes.valueOf(user));
+        return GroupRes.valueOf(group, UserRes.valueOf(user));
     }
 
     @Override
     public List<GroupRes> getGroups() {
-        List<Group> groups =  groupRepository.findAll();
-        return  groups
+        List<Group> groups = groupRepository.findAll();
+        return groups
                 .stream()
                 .map(group -> {
-                        User user = groupMemberRepository.getGroupOwner(group.getGroupCode());
-                        return GroupRes.valueOf(group,UserRes.valueOf(user));
+                    User user = groupMemberRepository.getGroupOwner(group.getGroupCode());
+                    return GroupRes.valueOf(group, UserRes.valueOf(user));
                 }).collect(Collectors.toList());
     }
 
     @Override
     public GroupRes getGroupDetail(String groupCode) {
         Group group = groupRepository.findByGroupCode(groupCode).orElseThrow(
-                () -> new BusinessException(ErrorCode.GROUP_CODE_NOT_FOUND,"Group not found")
+                () -> new BusinessException(ErrorCode.GROUP_CODE_NOT_FOUND, "Group not found")
         );
         User user = groupMemberRepository.getGroupOwner(groupCode);
-        return GroupRes.valueOf(group,UserRes.valueOf(user));
+        return GroupRes.valueOf(group, UserRes.valueOf(user));
     }
 
     @Override
     public List<MemberRes> getGroupMembers(String code) {
         List<GroupMember> users = groupMemberRepository.getGroupMembersByCode(code);
-        return users.stream().map(item -> MemberRes.valueOf(item.getUser(),item.getRoleType())).collect(Collectors.toList());
+        return users.stream().map(item -> MemberRes.valueOf(item.getUser(), item.getRoleType())).collect(Collectors.toList());
     }
 
     @Override
     public List<GroupRes> getGroupsCreatedByUser(String userCode) {
         List<Group> groups = groupMemberRepository.getGroupsCreatedByUser(userCode);
-        return groups.stream().map(item -> GroupRes.valueOf(item,null)).collect(Collectors.toList());
+        return groups.stream().map(item -> GroupRes.valueOf(item, null)).collect(Collectors.toList());
     }
 
     @Override
@@ -102,17 +102,17 @@ public class GroupServiceImpl implements GroupService {
     public boolean assignMemberRole(RoleAssignmentReq roleAssignmentReq) {
 
         Optional<Group> group = groupRepository.findByGroupCode(roleAssignmentReq.getGroupCode());
-        if(group.isEmpty()) {
+        if (group.isEmpty()) {
             return false;
         }
 
         Optional<User> user = userRepository.findByCode(roleAssignmentReq.getUserCode());
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             return false;
         }
-        List<GroupMember> groupMembers = groupMemberRepository.findAllByUserAndStatusAndGroup(user.get(),ECommonStatus.ACTIVE,group.get());
+        List<GroupMember> groupMembers = groupMemberRepository.findAllByUserAndStatusAndGroup(user.get(), ECommonStatus.ACTIVE, group.get());
 
-        for(GroupMember gr : groupMembers) {
+        for (GroupMember gr : groupMembers) {
             gr.setStatus(ECommonStatus.INACTIVE);
             groupMemberRepository.save(gr);
         }
@@ -133,7 +133,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public Group findActiveGroup(String code) {
         return this.findByCode(code).orElseThrow(
-                () -> new BusinessException(ErrorCode.GROUP_CODE_NOT_FOUND,"Group not found")
+                () -> new BusinessException(ErrorCode.GROUP_CODE_NOT_FOUND, "Group not found")
         );
     }
 
@@ -141,8 +141,8 @@ public class GroupServiceImpl implements GroupService {
     public boolean assignToGroup(JoinGroupReq joinGroupReq) {
         Group group = this.findActiveGroup(joinGroupReq.getGroupCode());
         User user = userService.findByUsername(joinGroupReq.getEmail());
-        Optional<User> member = groupMemberRepository.findMember(joinGroupReq.getGroupCode(),user.getCode());
-        if(member.isPresent()) {
+        Optional<User> member = groupMemberRepository.findMember(joinGroupReq.getGroupCode(), user.getCode());
+        if (member.isPresent()) {
             //throw new BusinessException(ErrorCode.USER_IS_ALREADY_IN_GROUP,"User is already in group");
             return false;
         }
@@ -161,10 +161,10 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public String joinByLink(JoinGroupReq joinGroupReq) {
         Group group = this.findActiveGroup(joinGroupReq.getGroupCode());
-        String principal =(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByUsername(principal);
-        Optional<User> member = groupMemberRepository.findMember(joinGroupReq.getGroupCode(),user.getCode());
-        if(member.isPresent()) {
+        Optional<User> member = groupMemberRepository.findMember(joinGroupReq.getGroupCode(), user.getCode());
+        if (member.isPresent()) {
             //throw new BusinessException(ErrorCode.USER_IS_ALREADY_IN_GROUP,"User is already in group");
             return null;
         }
@@ -185,6 +185,6 @@ public class GroupServiceImpl implements GroupService {
         int nextSeq = sequenceService.getNextSeq(GROUP_CODE, yy);
         String seqVal = Strings.formatWithZeroPrefix(nextSeq, 4);
 
-        return String.format("%s%s%s","GR", yy, seqVal);
+        return String.format("%s%s%s", "GR", yy, seqVal);
     }
 }
