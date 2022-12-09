@@ -2,19 +2,19 @@ server:
     port: 8080
     servlet:
         context-path: ${SERVICE_CONTEXT_PATH:/edu}
+
 spring:
     application:
         name: edu-box
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: ${JDBC_URL}
-        username: ${JDBC_USERNAME}
-        password: ${JDBC_PASSWORD}
+        url: jdbc:mysql://hcmus.mysql.database.azure.com:3306/edu_box?useSSL=true
+        username: hcmus
+        password: Edubox123
     jpa:
         properties:
             hibernate:
-                ddl-auto: update
-                dialect: org.hibernate.dialect.MySQL5Dialect
+                dialect: org.hibernate.dialect.SQLServer2012Dialect
         show_sql: true
         open-in-view: false
     mail:
@@ -29,6 +29,9 @@ spring:
                 smtp:
                     auth: true
                     starttls.enable: true
+    sql:
+        init:
+            mode: always
 app:
     api:
         ignoring:
