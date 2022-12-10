@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -62,7 +63,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setUsername(createUserReq.getUsername());
         user.setPassword(passwordEncoder.encode(createUserReq.getPassword()));
         user.setFullName(createUserReq.getFullName());
-        user.setCode(buildUserCode());
+        UUID uuid = UUID.randomUUID();
+        user.setCode(uuid.toString());
         user.setEmail(createUserReq.getEmail());
         user.setGender(createUserReq.getGender());
         user.setAge(createUserReq.getAge());

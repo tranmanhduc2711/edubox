@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -48,7 +49,8 @@ public class GroupServiceImpl implements GroupService {
     public GroupRes createGroup(CreateGroupReq createGroupReq) {
         Group group = new Group();
         group.setGroupName(createGroupReq.getName());
-        group.setGroupCode(buildGroupCode());
+        UUID uuid = UUID.randomUUID();
+        group.setGroupCode(uuid.toString());
         group.setDescription(createGroupReq.getDescription());
         group.setStatus(ECommonStatus.ACTIVE);
         group.setCapacity(createGroupReq.getCapacity());
