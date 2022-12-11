@@ -64,3 +64,42 @@ begin
         SELECT cur_val INTO nextVal FROM seq_next WHERE seq_name = seqName;
     COMMIT;
 end
+
+CREATE TABLE `presentation` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `code` varchar(64) NOT NULL,
+    `name` varchar(255) NOT NULL,
+    `description` varchar(255) NULL,
+    `group_id` int NULL,
+    `type` varchar(64),
+    `host_id` int NOT NULL,
+    `status` varchar(64),
+
+    PRIMARY KEY (id),
+    CONSTRAINT fk_presentation_gr  FOREIGN KEY (group_id) REFERENCES `edu_group`(id),
+    CONSTRAINT fk_presentation_user  FOREIGN KEY (host_id) REFERENCES `user`(id),
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `slide` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `code` varchar(64) NOT NULL,
+    `item_no` int,
+    `question` varchar(255) NOT NULL,
+    `present_id` int NOT NULL,
+    `status` varchar(64),
+
+    PRIMARY KEY (id),
+    CONSTRAINT fk_slide_presentation  FOREIGN KEY (present_id) REFERENCES `presentation`(id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `slide_choice` (
+     `id` int NOT NULL AUTO_INCREMENT,
+     `slide_id` int NOT NULL,
+     `icon` varchar(64),
+     `is_correct` int,
+     `answer` varchar(255) NOT NULL,
+
+     PRIMARY KEY (id),
+     CONSTRAINT fk_choice_slide  FOREIGN KEY (slide_id) REFERENCES `slide`(id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+

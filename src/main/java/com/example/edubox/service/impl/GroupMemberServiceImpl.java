@@ -21,7 +21,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
 
     @Override
     public List<GroupRes> getGroupsByUserCode(String code) {
-        User user = userService.findByCode(code);
+        User user = userService.findActiveUser(code);
         List<Group> groups = groupMemberRepository.getGroupsByUserCode(code);
         return groups
                 .stream()
