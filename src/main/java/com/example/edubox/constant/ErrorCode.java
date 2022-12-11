@@ -29,7 +29,9 @@ public enum ErrorCode {
 
     // group member
     GROUP_MEMBER_IS_OUT(400301),
-    USER_IS_ALREADY_IN_GROUP(400302);
+    USER_IS_ALREADY_IN_GROUP(400302),
+    PRESENTATION_CODE_NOT_FOUND(400401),
+    PRESENTATION_CODE_INACTIVE(400402);
     private final int value;
 
     ErrorCode(int value) {

@@ -23,7 +23,7 @@ public class UserController extends BaseController {
 
     @GetMapping
     ResponseEntity<?> getUser(@RequestParam(value = "userCode",required = true) String code) {
-        UserRes user = UserRes.valueOf(userService.findByCode(code));
+        UserRes user = UserRes.valueOf(userService.findActiveUser(code));
         return success(user);
     }
 

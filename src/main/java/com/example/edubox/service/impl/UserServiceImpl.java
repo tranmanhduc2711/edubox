@@ -110,10 +110,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User findByCode(String code) {
-        return userRepository.findByCode(code).orElseThrow(
+    public User findActiveUser(String code) {
+        User user = userRepository.findByCode(code).orElseThrow(
                 () -> new BusinessException(ErrorCode.USER_NOT_FOUND, String.format("User code not found: %s", code))
         );
+        if(ECommonStatus.INACTIVE.equals(user.getStatus())){
+            throw  new BusinessException(ErrorCode.USER_IS_INACTIVE,"User inactive");
+        }
+        return user;
     }
 
     @Override

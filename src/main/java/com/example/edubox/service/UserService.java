@@ -15,7 +15,7 @@ public interface UserService {
     User getUser(User user);
     User findByUsername(String username);
     Optional<User> findByEmail(String email);
-    User findByCode(String code);
+    User findActiveUser(String code);
     Optional<VerificationToken> getVerificationToken(String verificationToken);
     void createVerificationToken(User user, String token);
 }

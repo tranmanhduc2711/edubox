@@ -134,9 +134,13 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Group findActiveGroup(String code) {
-        return this.findByCode(code).orElseThrow(
+        Group group = findByCode(code).orElseThrow(
                 () -> new BusinessException(ErrorCode.GROUP_CODE_NOT_FOUND, "Group not found")
         );
+        if(ECommonStatus.INACTIVE.equals(group.getStatus())) {
+            throw new BusinessException(ErrorCode.GROUP_IS_INACTIVE,"Group code is inactive");
+        }
+        return group;
     }
 
     @Override
