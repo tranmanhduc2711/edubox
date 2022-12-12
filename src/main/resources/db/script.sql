@@ -82,7 +82,6 @@ CREATE TABLE `presentation` (
 
 CREATE TABLE `slide` (
     `id` int NOT NULL AUTO_INCREMENT,
-    `code` varchar(64) NOT NULL,
     `item_no` int,
     `question` varchar(255) NOT NULL,
     `present_id` int NOT NULL,

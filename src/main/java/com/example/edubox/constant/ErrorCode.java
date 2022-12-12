@@ -1,6 +1,5 @@
 package com.example.edubox.constant;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
@@ -31,7 +30,11 @@ public enum ErrorCode {
     GROUP_MEMBER_IS_OUT(400301),
     USER_IS_ALREADY_IN_GROUP(400302),
     PRESENTATION_CODE_NOT_FOUND(400401),
-    PRESENTATION_CODE_INACTIVE(400402);
+    PRESENTATION_CODE_INACTIVE(400402),
+    SLIDE_CHOICES_CANNOT_EMPTY(400501),
+    SLIDE_CHOICES_INVALID(400502),
+    SLIDE_NOT_FOUND(400503),
+    SLIDE_CHOICES_OVER_QUANTITY(400504);
     private final int value;
 
     ErrorCode(int value) {

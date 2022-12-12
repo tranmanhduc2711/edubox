@@ -13,7 +13,7 @@ public class PresentationRes {
     private String description;
     private String type;
     private String groupName;
-    private String hostName;
+    private UserRes hostName;
 
     public static PresentationRes valueOf(Presentation presentation) {
         return PresentationRes.builder()
@@ -22,7 +22,7 @@ public class PresentationRes {
                 .description(presentation.getDescription())
                 .type(presentation.getPresentType().getValue())
                 .groupName(presentation.getGroup().getGroupName())
-                .hostName(presentation.getHost().getFullName())
+                .hostName(UserRes.valueOf(presentation.getHost()))
                 .build();
 
     }

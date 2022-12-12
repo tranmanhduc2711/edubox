@@ -13,17 +13,21 @@ import com.example.edubox.model.res.PresentationRes;
 import com.example.edubox.repository.PresentationRepository;
 import com.example.edubox.service.GroupService;
 import com.example.edubox.service.PresentationService;
+import com.example.edubox.service.SequenceService;
 import com.example.edubox.service.UserService;
+import com.example.edubox.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class PresentationServiceImpl implements PresentationService {
+    private static final String PRESENTATION_CODE = "presentation-code-";
     @Autowired
     private PresentationRepository presentationRepository;
     @Autowired
@@ -31,9 +35,12 @@ public class PresentationServiceImpl implements PresentationService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private SequenceService sequenceService;
+
     @Override
-    public List<Presentation> getPresentations(EPresentType type) {
-        return presentationRepository.findPresentationByPresentType(type);
+    public List<Presentation> getPresentations(EPresentType type,String code) {
+        return presentationRepository.findPresentations(type,code);
     }
 
     @Override
@@ -43,8 +50,7 @@ public class PresentationServiceImpl implements PresentationService {
         User user = userService.findByUsername(principal);
 
         Presentation presentation = new Presentation();
-        UUID uuid = UUID.randomUUID();
-        presentation.setCode(uuid.toString());
+        presentation.setCode(buildPresentationCode());
         presentation.setPresentType(req.getType());
         presentation.setName(req.getName());
         presentation.setDescription(req.getDescription());
@@ -88,5 +94,13 @@ public class PresentationServiceImpl implements PresentationService {
             throw  new BusinessException(ErrorCode.PRESENTATION_CODE_INACTIVE,"Presentation inactive");
         }
         return presentation;
+    }
+
+    private String buildPresentationCode() {
+        int yy = LocalDate.now().getYear() % 100;
+        int nextSeq = sequenceService.getNextSeq(PRESENTATION_CODE, yy);
+        String seqVal = Strings.formatWithZeroPrefix(nextSeq, 4);
+
+        return String.format("%s%s%s", "PR", yy, seqVal);
     }
 }

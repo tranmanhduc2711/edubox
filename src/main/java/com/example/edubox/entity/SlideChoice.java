@@ -26,6 +26,9 @@ public class SlideChoice implements Serializable {
     @Column(name = "is_correct")
     private Boolean isCorrect;
 
+    @Column(name = "answer")
+    private String answer;
+
     @Column(name = "status")
     @Convert(converter = ECommonStatus.Converter.class)
     private ECommonStatus status;
