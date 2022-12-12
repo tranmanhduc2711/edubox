@@ -39,8 +39,8 @@ public class PresentationServiceImpl implements PresentationService {
     private SequenceService sequenceService;
 
     @Override
-    public List<Presentation> getPresentations(EPresentType type,String code) {
-        return presentationRepository.findPresentations(type,code);
+    public List<Presentation> getPresentations(EPresentType type, String code) {
+        return presentationRepository.findPresentations(type, code);
     }
 
     @Override
@@ -64,8 +64,8 @@ public class PresentationServiceImpl implements PresentationService {
     @Override
     public PresentationRes update(UpdatePresentationReq req) {
         Optional<Presentation> record = presentationRepository.findByCode(req.getCode());
-        if(record.isEmpty()) {
-            throw new BusinessException(ErrorCode.PRESENTATION_CODE_NOT_FOUND,"Presentation code not found");
+        if (record.isEmpty()) {
+            throw new BusinessException(ErrorCode.PRESENTATION_CODE_NOT_FOUND, "Presentation code not found");
         }
         Presentation presentation = record.get();
         presentation.setName(req.getName());
@@ -90,10 +90,18 @@ public class PresentationServiceImpl implements PresentationService {
         Presentation presentation = presentationRepository.findByCode(code).orElseThrow(
                 () -> new BusinessException(ErrorCode.PRESENTATION_CODE_NOT_FOUND, String.format("Presentation code not found: %s", code))
         );
-        if(ECommonStatus.INACTIVE.equals(presentation.getStatus())){
-            throw  new BusinessException(ErrorCode.PRESENTATION_CODE_INACTIVE,"Presentation inactive");
+        if (ECommonStatus.INACTIVE.equals(presentation.getStatus())) {
+            throw new BusinessException(ErrorCode.PRESENTATION_CODE_INACTIVE, "Presentation inactive");
         }
         return presentation;
+    }
+
+    @Override
+    public Boolean checkIsHost(String presentCode) {
+        Presentation presentation = findActive(presentCode);
+        String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByUsername(principal);
+        return user.getUsername().equals(presentation.getHost().getUsername());
     }
 
     private String buildPresentationCode() {
