@@ -9,10 +9,14 @@ import com.example.edubox.model.res.PresentationRes;
 import java.util.List;
 
 public interface PresentationService {
-    List<Presentation> getPresentations(EPresentType type);
+    List<Presentation> getPresentations(
+            EPresentType type,
+            String code);
+
     PresentationRes create(CreatePresentationReq req);
 
     PresentationRes update(UpdatePresentationReq req);
+
     PresentationRes delete(String presentCode);
 
     Presentation findActive(String code);

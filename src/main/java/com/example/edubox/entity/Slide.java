@@ -16,9 +16,6 @@ public class Slide implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "code")
-    private String code;
-
     @Column(name = "item_no")
     private Integer itemNo;
 

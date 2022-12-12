@@ -7,7 +7,6 @@ import com.example.edubox.model.req.CreatePresentationReq;
 import com.example.edubox.model.req.UpdatePresentationReq;
 import com.example.edubox.service.PresentationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,16 +19,18 @@ public class PresentationController extends BaseController {
     private PresentationService presentationService;
 
     @GetMapping("")
-    ResponseEntity<?> getPresentations(@RequestParam(value = "type",required = false) EPresentType type) {
-        return success(presentationService.getPresentations(type));
+    ResponseEntity<?> getPresentations(@RequestParam(value = "type", required = false) EPresentType type,
+                                       @RequestParam(value = "code", required = false) String code) {
+        return success(presentationService.getPresentations(type, code));
     }
 
     @PostMapping("")
     ResponseEntity<?> create(@RequestBody CreatePresentationReq req) {
         return success(presentationService.create(req));
     }
+
     @DeleteMapping("")
-    ResponseEntity<?> delete(@RequestParam(value = "code",required = true) String code) {
+    ResponseEntity<?> delete(@RequestParam(value = "code", required = true) String code) {
         return success(presentationService.delete(code));
     }
 

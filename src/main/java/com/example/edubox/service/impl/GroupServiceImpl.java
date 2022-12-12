@@ -49,8 +49,7 @@ public class GroupServiceImpl implements GroupService {
     public GroupRes createGroup(CreateGroupReq createGroupReq) {
         Group group = new Group();
         group.setGroupName(createGroupReq.getName());
-        UUID uuid = UUID.randomUUID();
-        group.setGroupCode(uuid.toString());
+        group.setGroupCode(buildGroupCode());
         group.setDescription(createGroupReq.getDescription());
         group.setStatus(ECommonStatus.ACTIVE);
         group.setCapacity(createGroupReq.getCapacity());
@@ -137,8 +136,8 @@ public class GroupServiceImpl implements GroupService {
         Group group = findByCode(code).orElseThrow(
                 () -> new BusinessException(ErrorCode.GROUP_CODE_NOT_FOUND, "Group not found")
         );
-        if(ECommonStatus.INACTIVE.equals(group.getStatus())) {
-            throw new BusinessException(ErrorCode.GROUP_IS_INACTIVE,"Group code is inactive");
+        if (ECommonStatus.INACTIVE.equals(group.getStatus())) {
+            throw new BusinessException(ErrorCode.GROUP_IS_INACTIVE, "Group code is inactive");
         }
         return group;
     }
