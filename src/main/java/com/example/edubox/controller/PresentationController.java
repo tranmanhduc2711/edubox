@@ -38,4 +38,9 @@ public class PresentationController extends BaseController {
     ResponseEntity<?> update(@RequestBody @Valid UpdatePresentationReq req) {
         return success(presentationService.update(req));
     }
+
+    @GetMapping("/check-host")
+    ResponseEntity<?> checkIsPresentationHost(@RequestParam(value = "presentCode", required = true) String code) {
+        return success(presentationService.checkIsHost(code));
+    }
 }

@@ -20,4 +20,6 @@ public interface PresentationService {
     PresentationRes delete(String presentCode);
 
     Presentation findActive(String code);
+
+    Boolean checkIsHost(String presentCode);
 }
