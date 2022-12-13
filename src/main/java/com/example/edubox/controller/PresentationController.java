@@ -33,6 +33,10 @@ public class PresentationController extends BaseController {
     ResponseEntity<?> delete(@RequestParam(value = "code", required = true) String code) {
         return success(presentationService.delete(code));
     }
+    @GetMapping("/delete")
+    ResponseEntity<?> deletePresent(@RequestParam(value = "code", required = true) String code) {
+        return success(presentationService.delete(code));
+    }
 
     @PutMapping("")
     ResponseEntity<?> update(@RequestBody @Valid UpdatePresentationReq req) {

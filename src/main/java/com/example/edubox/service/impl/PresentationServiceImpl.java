@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class PresentationServiceImpl implements PresentationService {
@@ -39,8 +39,11 @@ public class PresentationServiceImpl implements PresentationService {
     private SequenceService sequenceService;
 
     @Override
-    public List<Presentation> getPresentations(EPresentType type, String code) {
-        return presentationRepository.findPresentations(type, code);
+    public List<PresentationRes> getPresentations(EPresentType type, String code) {
+        return presentationRepository.findPresentations(type, code)
+                .stream()
+                .map(PresentationRes::valueOf)
+                .collect(Collectors.toList());
     }
 
     @Override

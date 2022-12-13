@@ -100,6 +100,7 @@ CREATE TABLE `slide`
     `item_no`    int,
     `question`   varchar(255) NOT NULL,
     `present_id` int          NOT NULL,
+    `timer`      int DEFAULT NULL,
     `status`     varchar(64),
 
     PRIMARY KEY (id),

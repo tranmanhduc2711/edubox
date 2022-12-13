@@ -52,9 +52,9 @@ public class SlideServiceImpl implements SlideService {
     }
 
     @Override
-    public List<SlideRes> getSlidesByPresentation(String code,Integer itemNo) {
+    public List<SlideRes> getSlidesByPresentation(String code, Integer itemNo) {
         Presentation presentation = presentationService.findActive(code);
-        List<Slide> slides = slideRepository.findSlides(presentation,itemNo, ECommonStatus.ACTIVE);
+        List<Slide> slides = slideRepository.findSlides(presentation, itemNo, ECommonStatus.ACTIVE);
         List<SlideRes> slidesRes = new ArrayList<>();
         for (Slide slide : slides) {
             List<SlideChoice> slideChoices =
@@ -108,11 +108,12 @@ public class SlideServiceImpl implements SlideService {
             slide.setItemNo(count);
             slide.setPresentation(presentation);
             slide.setQuestion(slideReq.getQuestions());
+            slide.setTimer(slideReq.getTimer());
             slide.setStatus(ECommonStatus.ACTIVE);
 
             slideRepository.save(slide);
             createSlideChoices(slideReq.getSlideChoices(), slide);
-            if(presentation.getTotalSlide() == null) {
+            if (presentation.getTotalSlide() == null) {
                 presentation.setTotalSlide(0);
             }
             presentation.incr(1);
@@ -121,8 +122,8 @@ public class SlideServiceImpl implements SlideService {
     }
 
     public List<SlideChoice> createSlideChoices(List<SlideChoiceReq> choiceReqs, Slide slide) {
-        if(choiceReqs.size() > 4){
-            throw new BusinessException(ErrorCode.SLIDE_CHOICES_OVER_QUANTITY,"Slide choices over");
+        if (choiceReqs.size() > 4) {
+            throw new BusinessException(ErrorCode.SLIDE_CHOICES_OVER_QUANTITY, "Slide choices over");
         }
         List<SlideChoice> res = new ArrayList<>();
         for (SlideChoiceReq choiceReq : choiceReqs) {
@@ -146,9 +147,9 @@ public class SlideServiceImpl implements SlideService {
     }
 
     private void rebuildPresentationItemNo(Presentation presentation) {
-        List<Slide> slides = slideRepository.findSlides(presentation,null,ECommonStatus.ACTIVE);
+        List<Slide> slides = slideRepository.findSlides(presentation, null, ECommonStatus.ACTIVE);
         int count = 1;
-        for (Slide s : slides){
+        for (Slide s : slides) {
             s.setItemNo(count++);
             slideRepository.save(s);
         }

@@ -16,12 +16,14 @@ import java.util.List;
 public class SlideRes {
     private Integer itemNo;
     private String question;
+    private Integer timer;
     private List<SlideChoiceRes> choices;
 
     public static SlideRes valueOf(Slide slide, List<SlideChoiceRes> choices){
         return SlideRes.builder()
                 .itemNo(slide.getItemNo())
                 .question(slide.getQuestion())
+                .timer(slide.getTimer())
                 .choices(choices)
                 .build();
     }

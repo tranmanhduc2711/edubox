@@ -9,7 +9,7 @@ import com.example.edubox.model.res.PresentationRes;
 import java.util.List;
 
 public interface PresentationService {
-    List<Presentation> getPresentations(
+    List<PresentationRes> getPresentations(
             EPresentType type,
             String code);
 
