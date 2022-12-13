@@ -1,7 +1,6 @@
 package com.example.edubox.model.res;
 
 import com.example.edubox.entity.Presentation;
-import com.example.edubox.entity.User;
 import lombok.Builder;
 import lombok.Data;
 
@@ -15,7 +14,7 @@ public class PresentationRes {
     private String description;
     private String type;
     private String groupName;
-    private UserRes hostName;
+    private UserRes host;
     private int totalSlide;
     private LocalDateTime createdAt;
 
@@ -26,7 +25,7 @@ public class PresentationRes {
                 .description(presentation.getDescription())
                 .type(presentation.getPresentType().getValue())
                 .groupName(presentation.getGroup().getGroupName())
-                .hostName(UserRes.valueOf(presentation.getHost()))
+                .host(UserRes.valueOf(presentation.getHost()))
                 .totalSlide(presentation.getTotalSlide())
                 .createdAt(presentation.getCreatedAt())
                 .build();

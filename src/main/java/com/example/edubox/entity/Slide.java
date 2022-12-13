@@ -26,6 +26,9 @@ public class Slide implements Serializable {
     @JoinColumn(nullable = false, name = "present_id")
     private Presentation presentation;
 
+    @Column(name = "timer")
+    private Integer timer;
+
     @Column(name = "status")
     @Convert(converter = ECommonStatus.Converter.class)
     private ECommonStatus status;
