@@ -112,6 +112,9 @@ public class SlideServiceImpl implements SlideService {
 
             slideRepository.save(slide);
             createSlideChoices(slideReq.getSlideChoices(), slide);
+            if(presentation.getTotalSlide() == null) {
+                presentation.setTotalSlide(0);
+            }
             presentation.incr(1);
             presentationRepository.save(presentation);
         }

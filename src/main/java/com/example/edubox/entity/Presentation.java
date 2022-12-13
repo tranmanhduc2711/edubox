@@ -42,7 +42,7 @@ public class Presentation implements Serializable {
     private User host;
 
     @Column(name = "total_slide")
-    private Integer totalSlide;
+    private Integer totalSlide = 0;
 
     @Column(name = "status")
     @Convert(converter = ECommonStatus.Converter.class)
