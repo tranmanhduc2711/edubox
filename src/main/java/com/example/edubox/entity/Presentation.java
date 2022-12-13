@@ -3,9 +3,11 @@ package com.example.edubox.entity;
 import com.example.edubox.constant.ECommonStatus;
 import com.example.edubox.constant.EPresentType;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "presentation")
@@ -39,7 +41,21 @@ public class Presentation implements Serializable {
     @JoinColumn(nullable = false, name = "host_id")
     private User host;
 
+    @Column(name = "total_slide")
+    private Integer totalSlide;
+
     @Column(name = "status")
     @Convert(converter = ECommonStatus.Converter.class)
     private ECommonStatus status;
+
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    public void incr(int val) {
+        this.totalSlide += val;
+    }
+    public void decr(int val) {
+        this.totalSlide -= val;
+    }
 }
