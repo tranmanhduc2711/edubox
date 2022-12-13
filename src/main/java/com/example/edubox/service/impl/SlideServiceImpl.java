@@ -98,6 +98,18 @@ public class SlideServiceImpl implements SlideService {
         return SlideRes.valueOf(slide, newSlideChoices.stream().map(SlideChoiceRes::valueOf).collect(Collectors.toList()));
     }
 
+    @Override
+    public SlideRes getSlide(String code, Integer itemNo) {
+        Presentation presentation = presentationService.findActive(code);
+        Slide slide = slideRepository
+                .findSlideByPresentationAndAndItemNoAndStatus(presentation,itemNo, ECommonStatus.ACTIVE)
+                .orElse(null);
+            List<SlideChoice> slideChoices =
+                    slideChoiceRepository.findSlideChoices(slide, ECommonStatus.ACTIVE);
+
+        return SlideRes.valueOf(slide,slideChoices.stream().map(SlideChoiceRes::valueOf).collect(Collectors.toList()));
+    }
+
     public void createSlides(List<SlideReq> slides, Presentation presentation) {
         int count = 0;
         for (SlideReq slideReq : slides) {

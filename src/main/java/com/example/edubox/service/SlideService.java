@@ -15,4 +15,5 @@ public interface SlideService {
     SlideRes deleteSlide(String presentCode, Integer itemNo);
 
     SlideRes updateSlide(UpdateSlideReq updateSlideReq);
+    SlideRes getSlide(String code,Integer itemNo);
 }
