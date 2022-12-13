@@ -85,7 +85,9 @@ CREATE TABLE `presentation`
     `group_id`    int NULL,
     `type`        varchar(64),
     `host_id`     int          NOT NULL,
+    `total_slide` int,
     `status`      varchar(64),
+    `created_at`  datetime DEFAULT NULL,
 
     PRIMARY KEY (id),
     CONSTRAINT fk_presentation_gr FOREIGN KEY (group_id) REFERENCES `edu_group` (id),

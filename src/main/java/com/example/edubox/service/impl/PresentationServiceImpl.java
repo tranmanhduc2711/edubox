@@ -56,6 +56,7 @@ public class PresentationServiceImpl implements PresentationService {
         presentation.setDescription(req.getDescription());
         presentation.setGroup(group);
         presentation.setHost(user);
+        presentation.setTotalSlide(0);
         presentation.setStatus(ECommonStatus.ACTIVE);
         presentationRepository.save(presentation);
         return PresentationRes.valueOf(presentation);

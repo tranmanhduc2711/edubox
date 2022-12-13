@@ -5,6 +5,8 @@ import com.example.edubox.entity.User;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 public class PresentationRes {
@@ -14,6 +16,8 @@ public class PresentationRes {
     private String type;
     private String groupName;
     private UserRes hostName;
+    private int totalSlide;
+    private LocalDateTime createdAt;
 
     public static PresentationRes valueOf(Presentation presentation) {
         return PresentationRes.builder()
@@ -23,6 +27,8 @@ public class PresentationRes {
                 .type(presentation.getPresentType().getValue())
                 .groupName(presentation.getGroup().getGroupName())
                 .hostName(UserRes.valueOf(presentation.getHost()))
+                .totalSlide(presentation.getTotalSlide())
+                .createdAt(presentation.getCreatedAt())
                 .build();
 
     }

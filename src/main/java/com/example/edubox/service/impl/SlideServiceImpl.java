@@ -74,6 +74,8 @@ public class SlideServiceImpl implements SlideService {
                 );
         slide.setStatus(ECommonStatus.INACTIVE);
         slideRepository.save(slide);
+        presentation.decr(1);
+        presentationRepository.save(presentation);
         rebuildPresentationItemNo(presentation);
         return SlideRes.valueOf(slide, null);
     }
@@ -99,17 +101,21 @@ public class SlideServiceImpl implements SlideService {
     }
 
     public void createSlides(List<SlideReq> slides, Presentation presentation) {
-        int count = 0;
+        int count = 1;
         for (SlideReq slideReq : slides) {
             validateSlideChoiceReq(slideReq);
             Slide slide = new Slide();
-            slide.setItemNo(count++);
+            slide.setItemNo(count);
             slide.setPresentation(presentation);
             slide.setQuestion(slideReq.getQuestions());
             slide.setStatus(ECommonStatus.ACTIVE);
 
             slideRepository.save(slide);
             createSlideChoices(slideReq.getSlideChoices(), slide);
+            if(presentation.getTotalSlide() == null) {
+                presentation.setTotalSlide(0);
+            }
+            presentation.incr(1);
             presentationRepository.save(presentation);
         }
     }
@@ -141,7 +147,7 @@ public class SlideServiceImpl implements SlideService {
 
     private void rebuildPresentationItemNo(Presentation presentation) {
         List<Slide> slides = slideRepository.findSlides(presentation,null,ECommonStatus.ACTIVE);
-        int count = 0;
+        int count = 1;
         for (Slide s : slides){
             s.setItemNo(count++);
             slideRepository.save(s);
