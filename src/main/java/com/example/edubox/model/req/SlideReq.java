@@ -14,5 +14,5 @@ public class SlideReq{
 
     private Integer timer;
 
-    private List<SlideChoiceReq> slideChoices;
+    private List<SlideChoiceReq> choices;
 }
