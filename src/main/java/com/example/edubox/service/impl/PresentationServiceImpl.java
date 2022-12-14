@@ -40,6 +40,7 @@ public class PresentationServiceImpl implements PresentationService {
 
     @Override
     public List<PresentationRes> getPresentations(EPresentType type, String code) {
+
         return presentationRepository.findPresentations(type, code)
                 .stream()
                 .map(PresentationRes::valueOf)
