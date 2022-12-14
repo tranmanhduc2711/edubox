@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 public class SlideReq{
     @NotEmpty(message = "Question cannot be empty")
-    private String questions;
+    private String question;
 
     private Integer timer;
 
