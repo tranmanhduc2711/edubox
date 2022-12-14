@@ -26,7 +26,7 @@ public class SlideController extends BaseController {
         return success(slideService.getSlidesByPresentation(code,itemNo));
     }
 
-    @GetMapping("")
+    @GetMapping("/delete")
     ResponseEntity<?> deleteSlide(
             @RequestParam(value = "presentCode", required = true) String presentCode,
             @RequestParam(value = "itemNo", required = true) Integer itemNo) {
