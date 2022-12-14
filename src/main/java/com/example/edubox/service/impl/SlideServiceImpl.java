@@ -10,6 +10,7 @@ import com.example.edubox.model.req.AddSlidesReq;
 import com.example.edubox.model.req.SlideChoiceReq;
 import com.example.edubox.model.req.SlideReq;
 import com.example.edubox.model.req.UpdateSlideReq;
+import com.example.edubox.model.res.PresentationRes;
 import com.example.edubox.model.res.SlideChoiceRes;
 import com.example.edubox.model.res.SlideRes;
 import com.example.edubox.repository.PresentationRepository;
@@ -81,25 +82,18 @@ public class SlideServiceImpl implements SlideService {
     }
 
     @Override
-    public SlideRes updateSlide(UpdateSlideReq updateSlideReq) {
-        Presentation presentation = presentationService.findActive(updateSlideReq.getPresentCode());
-        Slide slide = slideRepository.findSlideByPresentationAndAndItemNo(presentation, updateSlideReq.getItemNo())
-                .orElseThrow(
-                        () -> new BusinessException(ErrorCode.SLIDE_NOT_FOUND, "Slide not found")
-                );
-        List<SlideChoice> choices = slideChoiceRepository.findSlideChoices(slide, ECommonStatus.ACTIVE);
-        // update slide
-        slide.setQuestion(updateSlideReq.getQuestions());
-        slide.setTimer(updateSlideReq.getTimer());
-        for (SlideChoice slideChoice : choices) {
-            slideChoice.setStatus(ECommonStatus.INACTIVE);
-            slideChoiceRepository.save(slideChoice);
+    public PresentationRes updateSlide(UpdateSlideReq updateSlideReqs) {
+        Presentation presentation = presentationService.findActive(updateSlideReqs.getPresentCode());
+
+        List<Slide> slideRecords = slideRepository.findSlideByPresentationAndStatus(presentation, ECommonStatus.ACTIVE);
+        for (Slide s : slideRecords) {
+            s.setStatus(ECommonStatus.INACTIVE);
+            slideRepository.save(s);
         }
-        slideRepository.save(slide);
-        List<SlideChoice> newSlideChoices =
-                createSlideChoices(updateSlideReq.getSlideChoices(), slide);
-        return SlideRes.valueOf(slide, newSlideChoices.stream().map(SlideChoiceRes::valueOf).collect(Collectors.toList()));
-    }
+        updateSlidesRecord(updateSlideReqs.getSlides(),presentation);
+
+        return PresentationRes.valueOf(presentation);
+}
 
     public void createSlides(List<SlideReq> slides, Presentation presentation) {
         for (SlideReq slideReq : slides) {
@@ -111,13 +105,33 @@ public class SlideServiceImpl implements SlideService {
             slide.setStatus(ECommonStatus.ACTIVE);
 
             slideRepository.save(slide);
-            createSlideChoices(slideReq.getSlideChoices(), slide);
+            createSlideChoices(slideReq.getChoices(), slide);
             if (presentation.getTotalSlide() == null) {
                 presentation.setTotalSlide(0);
             }
             presentation.incr(1);
             presentationRepository.save(presentation);
         }
+        rebuildPresentationItemNo(presentation);
+    }
+    public void updateSlidesRecord(List<SlideReq> slides, Presentation presentation) {
+        presentation.setTotalSlide(0);
+        for (SlideReq slideReq : slides) {
+            validateSlideChoiceReq(slideReq);
+            Slide slide = new Slide();
+            slide.setPresentation(presentation);
+            slide.setQuestion(slideReq.getQuestions());
+            slide.setTimer(slideReq.getTimer());
+            slide.setStatus(ECommonStatus.ACTIVE);
+
+            slideRepository.save(slide);
+            createSlideChoices(slideReq.getChoices(), slide);
+            if (presentation.getTotalSlide() == null) {
+                presentation.setTotalSlide(0);
+            }
+            presentation.incr(1);
+        }
+        presentationRepository.save(presentation);
         rebuildPresentationItemNo(presentation);
     }
 
@@ -141,7 +155,7 @@ public class SlideServiceImpl implements SlideService {
     }
 
     private void validateSlideChoiceReq(SlideReq slideReq) {
-        if (CollectionUtils.isEmpty(slideReq.getSlideChoices())) {
+        if (CollectionUtils.isEmpty(slideReq.getChoices())) {
             throw new BusinessException(ErrorCode.SLIDE_CHOICES_CANNOT_EMPTY, "Slide choices cannot empty");
         }
     }

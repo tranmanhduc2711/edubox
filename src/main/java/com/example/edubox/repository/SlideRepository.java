@@ -17,4 +17,6 @@ public interface SlideRepository extends JpaRepository<Slide,Integer> {
             " ( s.itemNo = :itemNo OR :itemNo IS NULL)")
     List<Slide> findSlides(Presentation presentation, Integer itemNo, ECommonStatus status);
     Optional<Slide> findSlideByPresentationAndAndItemNo(Presentation presentation,Integer itemNo);
+
+    List<Slide> findSlideByPresentationAndStatus(Presentation presentation,ECommonStatus status);
 }
