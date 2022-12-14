@@ -1,5 +1,6 @@
 package com.example.edubox.service;
 
+import com.example.edubox.entity.Presentation;
 import com.example.edubox.model.req.AddSlidesReq;
 import com.example.edubox.model.req.UpdateSlideReq;
 import com.example.edubox.model.res.PresentationRes;
@@ -14,5 +15,5 @@ public interface SlideService {
 
     SlideRes deleteSlide(String presentCode, Integer itemNo);
 
-    PresentationRes updateSlide(UpdateSlideReq updateSlideReqs);
+    Presentation updateSlide(UpdateSlideReq updateSlideReqs);
 }

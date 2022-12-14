@@ -82,7 +82,7 @@ public class SlideServiceImpl implements SlideService {
     }
 
     @Override
-    public PresentationRes updateSlide(UpdateSlideReq updateSlideReqs) {
+    public Presentation updateSlide(UpdateSlideReq updateSlideReqs) {
         Presentation presentation = presentationService.findActive(updateSlideReqs.getPresentCode());
 
         List<Slide> slideRecords = slideRepository.findSlideByPresentationAndStatus(presentation, ECommonStatus.ACTIVE);
@@ -92,7 +92,7 @@ public class SlideServiceImpl implements SlideService {
         }
         updateSlidesRecord(updateSlideReqs.getSlides(),presentation);
 
-        return PresentationRes.valueOf(presentation);
+        return presentation;
 }
 
     public void createSlides(List<SlideReq> slides, Presentation presentation) {
@@ -100,7 +100,7 @@ public class SlideServiceImpl implements SlideService {
             validateSlideChoiceReq(slideReq);
             Slide slide = new Slide();
             slide.setPresentation(presentation);
-            slide.setQuestion(slideReq.getQuestions());
+            slide.setQuestion(slideReq.getQuestion());
             slide.setTimer(slideReq.getTimer());
             slide.setStatus(ECommonStatus.ACTIVE);
 
@@ -120,7 +120,7 @@ public class SlideServiceImpl implements SlideService {
             validateSlideChoiceReq(slideReq);
             Slide slide = new Slide();
             slide.setPresentation(presentation);
-            slide.setQuestion(slideReq.getQuestions());
+            slide.setQuestion(slideReq.getQuestion());
             slide.setTimer(slideReq.getTimer());
             slide.setStatus(ECommonStatus.ACTIVE);
 
