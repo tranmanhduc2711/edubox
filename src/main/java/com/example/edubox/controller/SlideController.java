@@ -26,14 +26,14 @@ public class SlideController extends BaseController {
         return success(slideService.getSlidesByPresentation(code,itemNo));
     }
 
-    @DeleteMapping("")
+    @GetMapping("/delete")
     ResponseEntity<?> deleteSlide(
             @RequestParam(value = "presentCode", required = true) String presentCode,
             @RequestParam(value = "itemNo", required = true) Integer itemNo) {
         return success(slideService.deleteSlide(presentCode, itemNo));
     }
 
-    @PutMapping("")
+    @PostMapping("")
     ResponseEntity<?> update(@RequestBody UpdateSlideReq req) {
         return success(slideService.updateSlide(req));
     }
