@@ -29,7 +29,7 @@ public class PresentationController extends BaseController {
         return success(presentationService.create(req));
     }
 
-    @DeleteMapping("")
+    @GetMapping("")
     ResponseEntity<?> delete(@RequestParam(value = "code", required = true) String code) {
         return success(presentationService.delete(code));
     }
@@ -38,7 +38,7 @@ public class PresentationController extends BaseController {
         return success(presentationService.delete(code));
     }
 
-    @PutMapping("")
+    @PostMapping("")
     ResponseEntity<?> update(@RequestBody @Valid UpdatePresentationReq req) {
         return success(presentationService.update(req));
     }
