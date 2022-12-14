@@ -90,6 +90,7 @@ public class SlideServiceImpl implements SlideService {
         List<SlideChoice> choices = slideChoiceRepository.findSlideChoices(slide, ECommonStatus.ACTIVE);
         // update slide
         slide.setQuestion(updateSlideReq.getQuestions());
+        slide.setTimer(updateSlideReq.getTimer());
         for (SlideChoice slideChoice : choices) {
             slideChoice.setStatus(ECommonStatus.INACTIVE);
             slideChoiceRepository.save(slideChoice);
@@ -101,11 +102,9 @@ public class SlideServiceImpl implements SlideService {
     }
 
     public void createSlides(List<SlideReq> slides, Presentation presentation) {
-        int count = 1;
         for (SlideReq slideReq : slides) {
             validateSlideChoiceReq(slideReq);
             Slide slide = new Slide();
-            slide.setItemNo(count);
             slide.setPresentation(presentation);
             slide.setQuestion(slideReq.getQuestions());
             slide.setTimer(slideReq.getTimer());
@@ -119,6 +118,7 @@ public class SlideServiceImpl implements SlideService {
             presentation.incr(1);
             presentationRepository.save(presentation);
         }
+        rebuildPresentationItemNo(presentation);
     }
 
     public List<SlideChoice> createSlideChoices(List<SlideChoiceReq> choiceReqs, Slide slide) {
