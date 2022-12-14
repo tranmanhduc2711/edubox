@@ -71,7 +71,7 @@ public class PresentationServiceImpl implements PresentationService {
     }
 
     @Override
-    public PresentationRes update(UpdatePresentationReq req) {
+    public Presentation update(UpdatePresentationReq req) {
         Optional<Presentation> record = presentationRepository.findByCode(req.getCode());
         if (record.isEmpty()) {
             throw new BusinessException(ErrorCode.PRESENTATION_CODE_NOT_FOUND, "Presentation code not found");
@@ -83,7 +83,7 @@ public class PresentationServiceImpl implements PresentationService {
         presentation.setStatus(req.getStatus());
 
         presentationRepository.save(presentation);
-        return PresentationRes.valueOf(presentation);
+        return presentation;
     }
 
     @Override
