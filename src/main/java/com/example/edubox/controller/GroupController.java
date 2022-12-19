@@ -47,8 +47,8 @@ public class GroupController extends BaseController {
     }
 
     @PostMapping("/assign")
-    public Boolean assignRole(@RequestBody RoleAssignmentReq roleAssignmentReq) {
-        return groupService.assignMemberRole(roleAssignmentReq);
+    public ResponseEntity<?> assignRole(@RequestBody RoleAssignmentReq roleAssignmentReq) {
+        return success(groupService.assignMemberRole(roleAssignmentReq));
     }
 
     @PostMapping("/add")

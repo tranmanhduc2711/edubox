@@ -5,6 +5,7 @@ import com.example.edubox.entity.GroupMember;
 import com.example.edubox.model.req.CreateGroupReq;
 import com.example.edubox.model.req.JoinGroupReq;
 import com.example.edubox.model.req.RoleAssignmentReq;
+import com.example.edubox.model.res.AssignMemberRoleRes;
 import com.example.edubox.model.res.GroupRes;
 import com.example.edubox.model.res.MemberRes;
 import com.example.edubox.model.res.UserRes;
@@ -22,7 +23,7 @@ public interface GroupService {
     List<MemberRes> getGroupMembers(String code);
     List<GroupRes> getGroupsCreatedByUser(String userCode);
 
-    boolean assignMemberRole(RoleAssignmentReq roleAssignmentReq);
+    AssignMemberRoleRes assignMemberRole(RoleAssignmentReq roleAssignmentReq);
 
     Optional<Group> findByCode(String code);
     Group findActiveGroup(String code);

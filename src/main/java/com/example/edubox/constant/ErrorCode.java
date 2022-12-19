@@ -12,8 +12,8 @@ public enum ErrorCode {
     ACCESS_DENIED(403),
 
     /*
-    *     Business error code 400XXX
-    * */
+     *     Business error code 400XXX
+     * */
 
     // User
     USER_NOT_FOUND(400100),
@@ -21,6 +21,7 @@ public enum ErrorCode {
     TOKEN_IS_ALREADY_CONFIRM(400102),
     USER_IS_INACTIVE(400103),
     EMAIL_IS_USED(400104),
+    USERNAME_NOT_FOUND(400105),
 
     // group
     GROUP_CODE_NOT_FOUND(400201),
@@ -29,8 +30,10 @@ public enum ErrorCode {
     // group member
     GROUP_MEMBER_IS_OUT(400301),
     USER_IS_ALREADY_IN_GROUP(400302),
+    //
     PRESENTATION_CODE_NOT_FOUND(400401),
     PRESENTATION_CODE_INACTIVE(400402),
+    //
     SLIDE_CHOICES_CANNOT_EMPTY(400501),
     SLIDE_CHOICES_INVALID(400502),
     SLIDE_NOT_FOUND(400503),
