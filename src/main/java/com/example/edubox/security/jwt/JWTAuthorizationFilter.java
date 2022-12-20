@@ -3,7 +3,6 @@ package com.example.edubox.security.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.edubox.constant.ErrorCode;
 import com.example.edubox.support.web.BaseResponseData;
@@ -11,7 +10,6 @@ import com.example.edubox.util.JsonUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -34,7 +32,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                                     HttpServletResponse res,
                                     FilterChain chain) throws IOException, ServletException {
         String servletPath = req.getServletPath();
-        SecurityContextHolder.getContext().getAuthentication();
         if (ignorePath != null && ignorePath.stream().anyMatch(p -> servletPath.contains(p))) {
             chain.doFilter(req, res);
             return;

@@ -87,6 +87,14 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public GroupRes deleteGroup(String groupCode) {
+        Group group = findActiveGroup(groupCode);
+        group.setStatus(ECommonStatus.INACTIVE);
+        groupRepository.save(group);
+        return GroupRes.valueOf(group,null);
+    }
+
+    @Override
     public List<MemberRes> getGroupMembers(String code) {
         List<GroupMember> users = groupMemberRepository.getGroupMembersByCode(code);
         return users.stream().map(item -> MemberRes.valueOf(item.getUser(), item.getRoleType())).collect(Collectors.toList());

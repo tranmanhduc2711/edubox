@@ -20,6 +20,8 @@ public interface GroupService {
 
     GroupRes getGroupDetail(String groupCode);
 
+    GroupRes deleteGroup(String groupCode);
+
     List<MemberRes> getGroupMembers(String code);
     List<GroupRes> getGroupsCreatedByUser(String userCode);
 

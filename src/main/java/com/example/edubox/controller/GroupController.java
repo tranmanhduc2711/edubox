@@ -46,6 +46,10 @@ public class GroupController extends BaseController {
         return success(groupService.getGroupsCreatedByUser(code));
     }
 
+    @GetMapping("/delete")
+    public ResponseEntity<?> deleteGroup(@RequestParam(value = "groupCode", required = true) String code) {
+        return success(groupService.deleteGroup(code));
+    }
     @PostMapping("/assign")
     public ResponseEntity<?> assignRole(@RequestBody RoleAssignmentReq roleAssignmentReq) {
         return success(groupService.assignMemberRole(roleAssignmentReq));
