@@ -1,6 +1,7 @@
 package com.example.edubox.controller;
 
 import com.example.edubox.controller.base.BaseController;
+import com.example.edubox.model.req.UpdatePasswordReq;
 import com.example.edubox.model.req.UpdateUserReq;
 import com.example.edubox.model.res.UserRes;
 import com.example.edubox.service.GroupMemberService;
@@ -43,6 +44,12 @@ public class UserController extends BaseController {
     @GetMapping(value = "/reset-password")
     ResponseEntity<?> sendMailResetPassword(@RequestParam(value = "username",required = true) String username) {
         mailService.sendMailResetPassword(username);
+        return success(null);
+    }
+
+    @PostMapping("/update-password")
+    ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordReq updatePasswordReq) {
+        userService.updatePassword(updatePasswordReq);
         return success(null);
     }
 }

@@ -24,6 +24,7 @@ import java.util.UUID;
 public class MailServiceImpl implements MailService {
     @Autowired
     private String clientBasePath;
+    private static final String serverBasePath = "https://edubox.azurewebsites.net";
     private static final String clientResetEndpoint = "/reset-password";
 
     private final UserService userService;
@@ -42,12 +43,12 @@ public class MailServiceImpl implements MailService {
 
         String recipientAddress = user.getEmail();
         String subject = "Registration Confirmation";
-        String confirmationUrl = "/registration/confirm?token=" + token;
+        String confirmationUrl = "edu/registration/confirm?token=" + token;
 
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);
-        email.setText("\r\n" + "http://localhost:8080/edu" + confirmationUrl);
+        email.setText("\r\n" + serverBasePath + confirmationUrl);
         mailSender.send(email);
     }
 
@@ -57,13 +58,14 @@ public class MailServiceImpl implements MailService {
 
         String recipientAddress = emailAddress;
         String subject = "Edubox Invitation";
-        String invitationLink = "/edu//invitation/";
+        String invitationLink = "/edu/invitation/";
 
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);
         email.setText("\r\n" + String.format("Invitation to join Group %s by link:", group.getGroupName()));
         email.setText("\r\n" + invitationLink);
+        mailSender.send(email);
     }
 
     @Override
@@ -81,5 +83,6 @@ public class MailServiceImpl implements MailService {
         email.setSubject(subject);
         email.setText("\r\n" + String.format("Hello %s,please click below link to reset password!", username));
         email.setText("\r\n" + resetClientPage);
+        mailSender.send(email);
     }
 }

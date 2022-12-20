@@ -1,8 +1,6 @@
 package com.example.edubox.socket;
 
 import com.corundumstudio.socketio.SocketIOClient;
-import com.example.edubox.constant.EMessageEvent;
-import com.example.edubox.socket.message.EventMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
