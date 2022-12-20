@@ -35,9 +35,9 @@ spring:
 app:
   api:
     ignoring:
-      antMatchers: ${API_IGNORING_URL:/login,/registration,/health}
+      antMatchers: ${API_IGNORING_URL:/login,/registration,/health,/update-password,/reset-password}
   client:
-    base-path: https://kahoot-client-e3jhc0osb-caohaisil201.vercel.app/
+    base-path: https://kahoot-client-e3jhc0osb-caohaisil201.vercel.app
 
 
 

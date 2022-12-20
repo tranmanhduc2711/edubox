@@ -114,9 +114,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(
+        User user =  userRepository.findByUsername(username).orElseThrow(
                 () -> new BusinessException(ErrorCode.USER_NOT_FOUND,"User not found")
         );
+        if(!ECommonStatus.ACTIVE.equals(user.getStatus())){
+            throw  new BusinessException(ErrorCode.USER_IS_INACTIVE,"User inactive");
+        }
+        return user;
     }
 
     @Override
