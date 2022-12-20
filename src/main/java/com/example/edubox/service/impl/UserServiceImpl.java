@@ -39,7 +39,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new BusinessException(ErrorCode.USER_NOT_FOUND,"User not found")
+        );
         if (user == null) {
             throw new BusinessException(ErrorCode.USER_NOT_FOUND, "User not found");
         }
@@ -55,8 +57,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User createUser(CreateUserReq createUserReq) {
-        User userRecord = userRepository.findByUsername(createUserReq.getUsername());
-        if (userRecord != null) {
+        Optional<User> userRecord = userRepository.findByUsername(createUserReq.getUsername());
+        if (userRecord.isPresent()) {
             throw new BusinessException(ErrorCode.EMAIL_IS_USED, "Email is already used");
         }
         User user = new User();
@@ -96,12 +98,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User getUser(User user) {
-        return userRepository.findByUsername(user.getUsername());
+        return userRepository.findByUsername(user.getUsername()).orElseThrow(
+                () -> new BusinessException(ErrorCode.USER_NOT_FOUND,"User not found")
+        );
     }
 
     @Override
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsername(username).orElseThrow(
+                () -> new BusinessException(ErrorCode.USER_NOT_FOUND,"User not found")
+        );
     }
 
     @Override

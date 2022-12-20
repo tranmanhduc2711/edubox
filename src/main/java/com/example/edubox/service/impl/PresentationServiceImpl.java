@@ -19,6 +19,7 @@ import com.example.edubox.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -40,11 +41,14 @@ public class PresentationServiceImpl implements PresentationService {
 
     @Override
     public List<PresentationRes> getPresentations(EPresentType type, String code) {
-
-        return presentationRepository.findPresentations(type, code)
-                .stream()
-                .map(PresentationRes::valueOf)
-                .collect(Collectors.toList());
+        List<Presentation> presentations= presentationRepository.findPresentations(type, code);
+        if(CollectionUtils.isEmpty(presentations)){
+            return null;
+        } else {
+            return presentations.stream()
+                    .map(PresentationRes::valueOf)
+                    .collect(Collectors.toList());
+        }
     }
 
     @Override
@@ -67,7 +71,7 @@ public class PresentationServiceImpl implements PresentationService {
     }
 
     @Override
-    public PresentationRes update(UpdatePresentationReq req) {
+    public Presentation update(UpdatePresentationReq req) {
         Optional<Presentation> record = presentationRepository.findByCode(req.getCode());
         if (record.isEmpty()) {
             throw new BusinessException(ErrorCode.PRESENTATION_CODE_NOT_FOUND, "Presentation code not found");
@@ -79,7 +83,7 @@ public class PresentationServiceImpl implements PresentationService {
         presentation.setStatus(req.getStatus());
 
         presentationRepository.save(presentation);
-        return PresentationRes.valueOf(presentation);
+        return presentation;
     }
 
     @Override

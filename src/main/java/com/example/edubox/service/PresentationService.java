@@ -15,7 +15,7 @@ public interface PresentationService {
 
     PresentationRes create(CreatePresentationReq req);
 
-    PresentationRes update(UpdatePresentationReq req);
+    Presentation update(UpdatePresentationReq req);
 
     PresentationRes delete(String presentCode);
 
