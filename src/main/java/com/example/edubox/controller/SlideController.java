@@ -33,7 +33,7 @@ public class SlideController extends BaseController {
         return success(slideService.deleteSlide(presentCode, itemNo));
     }
 
-    @PostMapping("")
+    @PostMapping("/update")
     ResponseEntity<?> update(@RequestBody UpdateSlideReq req) {
         return success(slideService.updateSlide(req));
     }

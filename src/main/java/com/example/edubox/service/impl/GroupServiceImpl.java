@@ -10,6 +10,7 @@ import com.example.edubox.exception.BusinessException;
 import com.example.edubox.model.req.CreateGroupReq;
 import com.example.edubox.model.req.JoinGroupReq;
 import com.example.edubox.model.req.RoleAssignmentReq;
+import com.example.edubox.model.res.AssignMemberRoleRes;
 import com.example.edubox.model.res.GroupRes;
 import com.example.edubox.model.res.MemberRes;
 import com.example.edubox.model.res.UserRes;
@@ -28,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -100,30 +100,29 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    public boolean assignMemberRole(RoleAssignmentReq roleAssignmentReq) {
+    public AssignMemberRoleRes assignMemberRole(RoleAssignmentReq roleAssignmentReq) {
+        Group group = findActiveGroup(roleAssignmentReq.getGroupCode());
 
-        Optional<Group> group = groupRepository.findByGroupCode(roleAssignmentReq.getGroupCode());
-        if (group.isEmpty()) {
-            return false;
-        }
-
-        Optional<User> user = userRepository.findByCode(roleAssignmentReq.getUserCode());
-        if (user.isEmpty()) {
-            return false;
-        }
-        List<GroupMember> groupMembers = groupMemberRepository.findAllByUserAndStatusAndGroup(user.get(), ECommonStatus.ACTIVE, group.get());
+        User user = userService.findActiveUser(roleAssignmentReq.getUserCode());
+        List<GroupMember> groupMembers = groupMemberRepository.findAllByUserAndStatusAndGroup(user, ECommonStatus.ACTIVE, group);
 
         for (GroupMember gr : groupMembers) {
             gr.setStatus(ECommonStatus.INACTIVE);
             groupMemberRepository.save(gr);
         }
         GroupMember groupMember = new GroupMember();
-        groupMember.setGroup(group.get());
-        groupMember.setUser(user.get());
+        groupMember.setGroup(group);
+        groupMember.setUser(user);
         groupMember.setRoleType(roleAssignmentReq.getRoleType());
         groupMember.setStatus(ECommonStatus.ACTIVE);
         groupMemberRepository.save(groupMember);
-        return true;
+
+        AssignMemberRoleRes res = new AssignMemberRoleRes();
+        res.setMemberCode(user.getCode());
+        res.setFullName(user.getFullName());
+        res.setUsername(user.getUsername());
+        res.setRole(roleAssignmentReq.getRoleType());
+        return res;
     }
 
     @Override

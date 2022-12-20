@@ -4,6 +4,7 @@ import com.example.edubox.controller.base.BaseController;
 import com.example.edubox.model.req.UpdateUserReq;
 import com.example.edubox.model.res.UserRes;
 import com.example.edubox.service.GroupMemberService;
+import com.example.edubox.service.MailService;
 import com.example.edubox.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +22,15 @@ public class UserController extends BaseController {
     private final UserService userService;
     private final GroupMemberService groupMemberService;
 
+    private final MailService mailService;
+
     @GetMapping
     ResponseEntity<?> getUser(@RequestParam(value = "userCode",required = true) String code) {
         UserRes user = UserRes.valueOf(userService.findActiveUser(code));
         return success(user);
     }
 
-    @PostMapping
+    @PostMapping("/update")
     ResponseEntity<?> updateUserProfile(@RequestBody UpdateUserReq updateUserReq) {
         return success(userService.updateUser(updateUserReq));
     }
@@ -37,4 +40,9 @@ public class UserController extends BaseController {
         return success(groupMemberService.getGroupsByUserCode(code));
     }
 
+    @GetMapping(value = "/reset-password")
+    ResponseEntity<?> sendMailResetPassword(@RequestParam(value = "username",required = true) String username) {
+        mailService.sendMailResetPassword(username);
+        return success(null);
+    }
 }
