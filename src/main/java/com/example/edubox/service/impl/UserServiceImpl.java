@@ -6,6 +6,7 @@ import com.example.edubox.entity.User;
 import com.example.edubox.entity.VerificationToken;
 import com.example.edubox.exception.BusinessException;
 import com.example.edubox.model.req.CreateUserReq;
+import com.example.edubox.model.req.UpdatePasswordReq;
 import com.example.edubox.model.req.UpdateUserReq;
 import com.example.edubox.model.res.UserRes;
 import com.example.edubox.repository.TokenRepository;
@@ -94,6 +95,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setStatus(updateUserReq.getStatus());
         userRepository.save(user);
         return UserRes.valueOf(user);
+    }
+
+    @Override
+    public void updatePassword(UpdatePasswordReq updatePasswordReq) {
+        User user = findByUsername(updatePasswordReq.getUsername());
+
+        user.setPassword(passwordEncoder.encode(updatePasswordReq.getPassword()));
+        userRepository.save(user);
     }
 
     @Override
