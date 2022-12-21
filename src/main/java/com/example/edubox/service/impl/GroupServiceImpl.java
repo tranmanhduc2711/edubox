@@ -88,6 +88,10 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupRes deleteGroup(String groupCode) {
+        Optional<User> user = groupMemberRepository.findGroupOwner(groupCode);
+        if(user.isEmpty()){
+            throw new BusinessException(ErrorCode.ACCESS_DENIED,"Member do not have permission");
+        }
         Group group = findActiveGroup(groupCode);
         group.setStatus(ECommonStatus.INACTIVE);
         groupRepository.save(group);
