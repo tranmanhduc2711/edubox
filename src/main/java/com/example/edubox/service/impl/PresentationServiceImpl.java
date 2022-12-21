@@ -88,7 +88,13 @@ public class PresentationServiceImpl implements PresentationService {
 
     @Override
     public PresentationRes delete(String presentCode) {
+        String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByUsername(principal);
+
         Presentation presentation = findActive(presentCode);
+        if(!presentation.getHost().equals(user)){
+            throw new BusinessException(ErrorCode.ACCESS_DENIED,"Only host& collaborator cant delete");
+        }
         presentation.setStatus(ECommonStatus.INACTIVE);
         presentationRepository.save(presentation);
         return PresentationRes.valueOf(presentation);
