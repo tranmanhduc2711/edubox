@@ -68,11 +68,13 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<GroupRes> getGroups() {
-        List<Group> groups = groupRepository.getListGroup(ECommonStatus.ACTIVE);
+        String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByUsername(principal);
+        List<Group> groups = groupMemberRepository.getGroupsByUserCode(user.getCode());
         return groups
                 .stream()
                 .map(group -> {
-                    User user = groupMemberRepository.getGroupOwner(group.getGroupCode());
+                    User userTmp = groupMemberRepository.getGroupOwner(group.getGroupCode());
                     return GroupRes.valueOf(group, UserRes.valueOf(user));
                 }).collect(Collectors.toList());
     }
