@@ -88,8 +88,10 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupRes deleteGroup(String groupCode) {
-        Optional<User> user = groupMemberRepository.findGroupOwner(groupCode);
-        if(user.isEmpty()){
+        String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByUsername(principal);
+        Optional<User> owner = groupMemberRepository.findGroupOwner(groupCode);
+        if(!user.equals(owner)){
             throw new BusinessException(ErrorCode.ACCESS_DENIED,"Member do not have permission");
         }
         Group group = findActiveGroup(groupCode);
@@ -113,6 +115,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional
     public AssignMemberRoleRes assignMemberRole(RoleAssignmentReq roleAssignmentReq) {
+        validateRoleAssignment(roleAssignmentReq);
         Group group = findActiveGroup(roleAssignmentReq.getGroupCode());
 
         User user = userService.findActiveUser(roleAssignmentReq.getUserCode());
@@ -135,6 +138,22 @@ public class GroupServiceImpl implements GroupService {
         res.setUsername(user.getUsername());
         res.setRole(roleAssignmentReq.getRoleType());
         return res;
+    }
+
+    private void validateRoleAssignment(RoleAssignmentReq roleAssignmentReq) {
+        String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User assignBy = userService.findByUsername(principal);
+
+        ERoleType roleType = groupMemberRepository.getUserRoleType(roleAssignmentReq.getGroupCode(),assignBy);
+        if(roleAssignmentReq.getRoleType().equals(ERoleType.CO_OWNER)) {
+            if(!roleType.equals(ERoleType.OWNER)) {
+                throw new BusinessException(ErrorCode.ACCESS_DENIED,"Permission denied");
+            }
+        } else if(roleAssignmentReq.getRoleType().equals(ERoleType.KICK_OUT)) {
+            if(roleType.equals(ERoleType.MEMBER)) {
+                throw new BusinessException(ErrorCode.ACCESS_DENIED,"Permission denied");
+            }
+        }
     }
 
     @Override

@@ -5,21 +5,22 @@ import com.example.edubox.constant.ErrorCode;
 import com.example.edubox.entity.Presentation;
 import com.example.edubox.entity.Slide;
 import com.example.edubox.entity.SlideChoice;
+import com.example.edubox.entity.User;
 import com.example.edubox.exception.BusinessException;
 import com.example.edubox.model.req.AddSlidesReq;
 import com.example.edubox.model.req.SlideChoiceReq;
 import com.example.edubox.model.req.SlideReq;
 import com.example.edubox.model.req.UpdateSlideReq;
-import com.example.edubox.model.res.PresentationRes;
 import com.example.edubox.model.res.SlideChoiceRes;
 import com.example.edubox.model.res.SlideRes;
 import com.example.edubox.repository.PresentationRepository;
 import com.example.edubox.repository.SlideChoiceRepository;
 import com.example.edubox.repository.SlideRepository;
 import com.example.edubox.service.PresentationService;
-import com.example.edubox.service.SequenceService;
 import com.example.edubox.service.SlideService;
+import com.example.edubox.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -42,7 +43,7 @@ public class SlideServiceImpl implements SlideService {
     @Autowired
     private PresentationService presentationService;
     @Autowired
-    private SequenceService sequenceService;
+    private UserService userService;
 
     @Override
     @Transactional
@@ -68,7 +69,13 @@ public class SlideServiceImpl implements SlideService {
 
     @Override
     public SlideRes deleteSlide(String presentCode, Integer itemNo) {
+        String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByUsername(principal);
+
         Presentation presentation = presentationService.findActive(presentCode);
+        if(!user.equals(presentation.getHost())) {
+            throw new BusinessException(ErrorCode.ACCESS_DENIED,"Permission denied");
+        }
         Slide slide = slideRepository.findSlideByPresentationAndAndItemNo(presentation, itemNo)
                 .orElseThrow(
                         () -> new BusinessException(ErrorCode.SLIDE_NOT_FOUND, "Slide not found")
