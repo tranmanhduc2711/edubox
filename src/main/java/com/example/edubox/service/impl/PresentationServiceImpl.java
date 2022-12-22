@@ -92,7 +92,7 @@ public class PresentationServiceImpl implements PresentationService {
         User user = userService.findByUsername(principal);
 
         Presentation presentation = findActive(presentCode);
-        if(!presentation.getHost().equals(user)){
+        if(!presentation.getHost().getUsername().equals(user.getUsername())){
             throw new BusinessException(ErrorCode.ACCESS_DENIED,"Only host& collaborator cant delete");
         }
         presentation.setStatus(ECommonStatus.INACTIVE);
