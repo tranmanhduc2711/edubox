@@ -68,7 +68,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<GroupRes> getGroups() {
-        List<Group> groups = groupRepository.findAll();
+        List<Group> groups = groupRepository.getListGroup(ECommonStatus.ACTIVE);
         return groups
                 .stream()
                 .map(group -> {
@@ -91,7 +91,7 @@ public class GroupServiceImpl implements GroupService {
         String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByUsername(principal);
         Optional<User> owner = groupMemberRepository.findGroupOwner(groupCode);
-        if(!user.equals(owner)){
+        if(!user.getUsername().equals(owner.get().getUsername())){
             throw new BusinessException(ErrorCode.ACCESS_DENIED,"Member do not have permission");
         }
         Group group = findActiveGroup(groupCode);
