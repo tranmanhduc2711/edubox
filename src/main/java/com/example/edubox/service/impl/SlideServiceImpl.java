@@ -1,6 +1,7 @@
 package com.example.edubox.service.impl;
 
 import com.example.edubox.constant.ECommonStatus;
+import com.example.edubox.constant.ESlideType;
 import com.example.edubox.constant.ErrorCode;
 import com.example.edubox.entity.Presentation;
 import com.example.edubox.entity.Slide;
@@ -19,6 +20,7 @@ import com.example.edubox.repository.SlideRepository;
 import com.example.edubox.service.PresentationService;
 import com.example.edubox.service.SlideService;
 import com.example.edubox.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -107,7 +109,9 @@ public class SlideServiceImpl implements SlideService {
             validateSlideChoiceReq(slideReq);
             Slide slide = new Slide();
             slide.setPresentation(presentation);
-            slide.setQuestion(slideReq.getQuestion());
+            slide.setSlideType(slideReq.getType());
+            slide.setHeading(slideReq.getHeading());
+            slide.setParagraph(slideReq.getParagraph());
             slide.setTimer(slideReq.getTimer());
             slide.setStatus(ECommonStatus.ACTIVE);
 
@@ -124,15 +128,19 @@ public class SlideServiceImpl implements SlideService {
     public void updateSlidesRecord(List<SlideReq> slides, Presentation presentation) {
         presentation.setTotalSlide(0);
         for (SlideReq slideReq : slides) {
-            validateSlideChoiceReq(slideReq);
+            validateSlideReq(slideReq);
             Slide slide = new Slide();
             slide.setPresentation(presentation);
-            slide.setQuestion(slideReq.getQuestion());
+            slide.setSlideType(slideReq.getType());
+            slide.setHeading(slideReq.getHeading());
+            slide.setParagraph(slideReq.getParagraph());
             slide.setTimer(slideReq.getTimer());
             slide.setStatus(ECommonStatus.ACTIVE);
 
             slideRepository.save(slide);
-            createSlideChoices(slideReq.getChoices(), slide);
+            if(!CollectionUtils.isEmpty(slideReq.getChoices())) {
+                createSlideChoices(slideReq.getChoices(), slide);
+            }
             if (presentation.getTotalSlide() == null) {
                 presentation.setTotalSlide(0);
             }
@@ -143,9 +151,6 @@ public class SlideServiceImpl implements SlideService {
     }
 
     public List<SlideChoice> createSlideChoices(List<SlideChoiceReq> choiceReqs, Slide slide) {
-        if (choiceReqs.size() > 4) {
-            throw new BusinessException(ErrorCode.SLIDE_CHOICES_OVER_QUANTITY, "Slide choices over");
-        }
         List<SlideChoice> res = new ArrayList<>();
         for (SlideChoiceReq choiceReq : choiceReqs) {
             SlideChoice choice = new SlideChoice();
@@ -166,7 +171,21 @@ public class SlideServiceImpl implements SlideService {
             throw new BusinessException(ErrorCode.SLIDE_CHOICES_CANNOT_EMPTY, "Slide choices cannot empty");
         }
     }
-
+    private void validateSlideReq(SlideReq slideReq) {
+        if (ESlideType.HEADING.equals(slideReq.getType())) {
+            if(StringUtils.isEmpty(slideReq.getHeading())) {
+                throw new BusinessException(ErrorCode.SLIDE_HEADING_MISSING,"Missing header");
+            }
+        } else if (ESlideType.PARAGRAPH.equals(slideReq.getType())) {
+            if(StringUtils.isEmpty(slideReq.getParagraph())) {
+                throw new BusinessException(ErrorCode.SLIDE_PARAGRAPH_MISSING,"Missing paragraph");
+            }
+        } else {
+            if(CollectionUtils.isEmpty(slideReq.getChoices())) {
+                throw new BusinessException(ErrorCode.SLIDE_CHOICES_CANNOT_EMPTY,"Missing slide choices");
+            }
+        }
+    }
     private void rebuildPresentationItemNo(Presentation presentation) {
         List<Slide> slides = slideRepository.findSlides(presentation, null, ECommonStatus.ACTIVE);
         int count = 1;
