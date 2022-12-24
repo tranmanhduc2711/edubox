@@ -1,6 +1,7 @@
 package com.example.edubox.entity;
 
 import com.example.edubox.constant.ECommonStatus;
+import com.example.edubox.constant.ESlideType;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -19,8 +20,14 @@ public class Slide implements Serializable {
     @Column(name = "item_no")
     private Integer itemNo;
 
-    @Column(name = "question")
-    private String question;
+    @Column(name = "heading")
+    private String heading;
+
+    @Column(name = "paragraph")
+    private String paragraph;
+
+    @Column(name = "type")
+    private ESlideType slideType;
 
     @OneToOne(targetEntity = Presentation.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "present_id")

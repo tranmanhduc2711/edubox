@@ -96,10 +96,12 @@ CREATE TABLE `presentation`
 
 CREATE TABLE `slide`
 (
-    `id`         int          NOT NULL AUTO_INCREMENT,
+    `id`         int NOT NULL AUTO_INCREMENT,
     `item_no`    int,
-    `question`   varchar(255) NOT NULL,
-    `present_id` int          NOT NULL,
+    `type`       varchar(64) NOT NULL,
+    `heading`    varchar(255),
+    `paragraph`  varchar(255),
+    `present_id` int NOT NULL,
     `timer`      int DEFAULT NULL,
     `status`     varchar(64),
 

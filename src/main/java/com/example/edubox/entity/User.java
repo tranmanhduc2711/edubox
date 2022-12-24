@@ -2,6 +2,7 @@ package com.example.edubox.entity;
 
 import com.example.edubox.constant.ECommonStatus;
 import com.example.edubox.constant.EGender;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,15 +23,18 @@ public class User implements Serializable {
     private static final long serialVersionUID = -4917850556927078372L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private int id;
 
     @Column(name = "code")
     private String code;
 
     @Column(name = "username")
+    @JsonIgnore
     private String username;
 
     @Column(name = "password")
+    @JsonIgnore
     private String password;
 
     @Column(name = "full_name")

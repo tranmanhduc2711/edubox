@@ -80,7 +80,6 @@ public class PresentationServiceImpl implements PresentationService {
         presentation.setName(req.getName());
         presentation.setDescription(req.getDescription());
         presentation.setPresentType(req.getType());
-        presentation.setStatus(req.getStatus());
 
         presentationRepository.save(presentation);
         return presentation;
