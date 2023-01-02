@@ -46,7 +46,7 @@ public class Presentation implements Serializable {
 
     @Column(name = "status")
     @Convert(converter = ECommonStatus.Converter.class)
-    private ECommonStatus status;
+    private ECommonStatus status = ECommonStatus.ACTIVE;
 
     @CreationTimestamp
     @Column(name = "created_at")

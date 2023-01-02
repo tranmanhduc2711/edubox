@@ -122,14 +122,28 @@ CREATE TABLE `slide_choice`
     CONSTRAINT fk_choice_slide FOREIGN KEY (slide_id) REFERENCES `slide` (id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE `presentation_collaborator`
+(
+    `id`              int AUTO_INCREMENT,
+    `presentation_id` int,
+    `user_id`         collaborator,
+    `status`          varchar(64),
+
+    PRIMARY KEY (id),
+    CONSTRAINT fk_collab_present FOREIGN KEY (presentation_id) REFERENCES `presentation` (id),
+    CONSTRAINT fk_collab_user FOREIGN KEY (user_id) REFERENCES `user` (id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
 CREATE TABLE `question`
 (
     `id`              int NOT NULL AUTO_INCREMENT,
+    `code`            varchar(64),
     `presentation_id` int NOT NULL,
     `title`           varchar(255),
-    `is_replied`      int,
+    `is_answered`      int,
     `post_date`       datetime,
-    `vote`             int,
+    `vote`            int,
     `status`          varchar(64) DEFAULT NULL,
 
     PRIMARY KEY (id),
