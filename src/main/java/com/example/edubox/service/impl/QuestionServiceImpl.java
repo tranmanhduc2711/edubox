@@ -4,18 +4,22 @@ import com.example.edubox.constant.ECommonStatus;
 import com.example.edubox.constant.ErrorCode;
 import com.example.edubox.entity.Presentation;
 import com.example.edubox.entity.Question;
+import com.example.edubox.entity.User;
 import com.example.edubox.exception.BusinessException;
 import com.example.edubox.model.req.CreateQuestionReq;
 import com.example.edubox.model.res.PresentationRes;
 import com.example.edubox.model.res.QuestionRes;
 import com.example.edubox.repository.PresentationRepository;
 import com.example.edubox.repository.QuestionRepository;
+import com.example.edubox.service.CollaboratorService;
 import com.example.edubox.service.PresentationService;
 import com.example.edubox.service.QuestionService;
 import com.example.edubox.service.SequenceService;
+import com.example.edubox.service.UserService;
 import com.example.edubox.util.Strings;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -33,14 +37,16 @@ public class QuestionServiceImpl implements QuestionService {
     private final PresentationService presentationService;
     private final SequenceService sequenceService;
     private final PresentationRepository presentationRepository;
+    private final UserService userService;
+    private final CollaboratorService collaboratorService;
 
     @Override
     public Question findActive(String code) {
         Question question = questionRepository.findQuestionByCode(code).orElseThrow(
-                () -> new BusinessException(ErrorCode.QUESTION_CODE_NOT_FOUND,"Question code not found")
+                () -> new BusinessException(ErrorCode.QUESTION_CODE_NOT_FOUND, "Question code not found")
         );
-        if(question.getStatus().equals(ECommonStatus.INACTIVE)) {
-            throw new BusinessException(ErrorCode.QUESTION_INACTIVE,"Question inactive");
+        if (question.getStatus().equals(ECommonStatus.INACTIVE)) {
+            throw new BusinessException(ErrorCode.QUESTION_INACTIVE, "Question inactive");
         }
         return question;
     }
@@ -98,6 +104,14 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public void markAnswered(String questionCode) {
         Question question = findActive(questionCode);
+        if (!collaboratorService.checkACL(question.getPresentation().getCode())) {
+            throw new BusinessException(ErrorCode.ACCESS_DENIED, "missing permission");
+        }
+        String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByUsername(principal);
+        if (!question.getPresentation().getHost().getUsername().equals(user.getUsername())) {
+            throw new BusinessException(ErrorCode.ACCESS_DENIED, "missing permission");
+        }
 
         question.setIsAnswered(Boolean.TRUE);
         questionRepository.save(question);

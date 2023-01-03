@@ -44,7 +44,8 @@ public enum ErrorCode {
     QUESTION_INACTIVE(400602),
 
     //
-    COLLABORATOR(400701);
+    COLLABORATOR(400701),
+    COLLABORATOR_IS_ALREADY_EXIST(400702);
     private final int value;
 
     ErrorCode(int value) {
