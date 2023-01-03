@@ -2,6 +2,7 @@ package com.example.edubox.controller;
 
 import com.example.edubox.controller.base.BaseController;
 import com.example.edubox.model.req.CreateGroupReq;
+import com.example.edubox.model.req.DeleteMemberReq;
 import com.example.edubox.model.req.JoinGroupReq;
 import com.example.edubox.model.req.RoleAssignmentReq;
 import com.example.edubox.service.GroupService;
@@ -64,6 +65,13 @@ public class GroupController extends BaseController {
     @PostMapping("/join")
     public String joinByLink(@RequestBody JoinGroupReq joinGroupReq) {
         return groupService.joinByLink(joinGroupReq);
+    }
+
+
+    @PostMapping("/delete-member")
+    public ResponseEntity<?> deleteMember(@RequestBody DeleteMemberReq req) {
+        groupService.deleteMember(req);
+        return success(null);
     }
 
 }

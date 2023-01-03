@@ -8,6 +8,7 @@ import com.example.edubox.entity.GroupMember;
 import com.example.edubox.entity.User;
 import com.example.edubox.exception.BusinessException;
 import com.example.edubox.model.req.CreateGroupReq;
+import com.example.edubox.model.req.DeleteMemberReq;
 import com.example.edubox.model.req.JoinGroupReq;
 import com.example.edubox.model.req.RoleAssignmentReq;
 import com.example.edubox.model.res.AssignMemberRoleRes;
@@ -215,6 +216,24 @@ public class GroupServiceImpl implements GroupService {
         groupMember.setStatus(ECommonStatus.ACTIVE);
         groupMemberRepository.save(groupMember);
         return group.getGroupCode();
+    }
+
+    @Override
+    public void deleteMember(DeleteMemberReq req) {
+        User user = userService.findByUsername(req.getEmail());
+        Group group = findActiveGroup(req.getGroupCode());
+
+        String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        User owner = groupMemberRepository.getGroupOwner(req.getGroupCode());
+        if (!owner.getUsername().equals(userService.findByUsername(principal).getUsername())) {
+            throw new BusinessException(ErrorCode.ACCESS_DENIED, "missing permission");
+        }
+        List<GroupMember> groupMembers = groupMemberRepository.findAllByUserAndStatusAndGroup(user, ECommonStatus.ACTIVE, group);
+        for (GroupMember gr : groupMembers) {
+            gr.setStatus(ECommonStatus.INACTIVE);
+            groupMemberRepository.save(gr);
+        }
     }
 
     private String buildGroupCode() {
