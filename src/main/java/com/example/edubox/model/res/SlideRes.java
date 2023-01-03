@@ -2,7 +2,6 @@ package com.example.edubox.model.res;
 
 import com.example.edubox.constant.ESlideType;
 import com.example.edubox.entity.Slide;
-import com.example.edubox.entity.SlideChoice;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

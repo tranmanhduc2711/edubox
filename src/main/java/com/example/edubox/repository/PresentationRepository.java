@@ -17,4 +17,6 @@ public interface PresentationRepository extends JpaRepository<Presentation, Inte
     List<Presentation> findPresentations(EPresentType presentType, String code);
 
     Optional<Presentation> findByCode(String code);
+
+    Presentation findPresentationByCode(String code);
 }
