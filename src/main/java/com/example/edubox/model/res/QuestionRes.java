@@ -15,8 +15,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class QuestionRes {
     private String title;
+    private String code;
+
     private PresentationRes presentationRes;
-    private Boolean isReplied;
+    private Boolean isAnswered;
     private LocalDateTime postDate;
     private Integer vote;
     private ECommonStatus status;
@@ -24,7 +26,8 @@ public class QuestionRes {
     public static QuestionRes valueOf(Question question){
         return QuestionRes.builder()
                 .title(question.getTitle())
-                .isReplied(question.getIsAnswered())
+                .code(question.getCode())
+                .isAnswered(question.getIsAnswered())
                 .postDate(question.getPostDate())
                 .vote(question.getVote())
                 .status(question.getStatus())

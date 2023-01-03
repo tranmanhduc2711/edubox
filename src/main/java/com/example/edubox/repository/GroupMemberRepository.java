@@ -29,7 +29,7 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Intege
     @Query("SELECT g.user FROM GroupMember g WHERE g.group.groupCode = :groupCode AND g.user.code = :memberCode AND g.status='A' ")
     Optional<User> findMember(String groupCode,String memberCode);
 
-    @Query("SELECT g.group FROM GroupMember g WHERE  g.user.code = :code AND g.status='A' ")
+    @Query("SELECT g.group FROM GroupMember g WHERE  g.user.code = :code AND g.group.status='A' ")
     List<Group> getGroupsByUserCode(String code);
 
     List<GroupMember> findAllByUserAndStatusAndGroup(User user,ECommonStatus status,Group group);

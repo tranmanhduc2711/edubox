@@ -12,10 +12,14 @@ import com.example.edubox.repository.PresentationRepository;
 import com.example.edubox.repository.QuestionRepository;
 import com.example.edubox.service.PresentationService;
 import com.example.edubox.service.QuestionService;
+import com.example.edubox.service.SequenceService;
+import com.example.edubox.util.Strings;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +28,10 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class QuestionServiceImpl implements QuestionService {
-
+    private final static String QUESTION_CODE = "question-code";
     private final QuestionRepository questionRepository;
     private final PresentationService presentationService;
-
+    private final SequenceService sequenceService;
     private final PresentationRepository presentationRepository;
 
     @Override
@@ -67,6 +71,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    @Transactional
     public QuestionRes create(CreateQuestionReq createQuestionReq) {
         Presentation presentation = presentationService.findActive(createQuestionReq.getPresentCode());
 
@@ -77,6 +82,7 @@ public class QuestionServiceImpl implements QuestionService {
         question.setVote(0);
         question.setStatus(ECommonStatus.ACTIVE);
         question.setPostDate(LocalDateTime.now());
+        question.setCode(buildQuestionCode());
         questionRepository.save(question);
         return QuestionRes.valueOf(question);
     }
@@ -95,5 +101,12 @@ public class QuestionServiceImpl implements QuestionService {
 
         question.setIsAnswered(Boolean.TRUE);
         questionRepository.save(question);
+    }
+    private String buildQuestionCode() {
+        int yy = LocalDate.now().getYear() % 100;
+        int nextSeq = sequenceService.getNextSeq(QUESTION_CODE, yy);
+        String seqVal = Strings.formatWithZeroPrefix(nextSeq, 4);
+
+        return String.format("%s%s%s", "QS", yy, seqVal);
     }
 }

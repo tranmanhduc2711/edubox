@@ -18,7 +18,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "presentation_collaborator")
+@Table(name = "question")
 @Getter
 @Setter
 public class Question implements Serializable {

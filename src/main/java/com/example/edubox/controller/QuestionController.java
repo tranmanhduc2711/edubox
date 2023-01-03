@@ -43,7 +43,7 @@ public class QuestionController extends BaseController {
 
     @GetMapping("/mark-answered")
     ResponseEntity<?> markAnswered(@RequestParam(value = "questionCode",required = true) String code){
-        questionService.upvote(code);
+        questionService.markAnswered(code);
         return success(null);
     }
 
