@@ -59,7 +59,10 @@ public class PresentationServiceImpl implements PresentationService {
 
         Presentation presentation = new Presentation();
         presentation.setCode(buildPresentationCode());
-        presentation.setPresentType(req.getType());
+        presentation.setPresentType(EPresentType.PUBLIC);
+        if(req.getType() != null) {
+            presentation.setPresentType(req.getType());
+        }
         presentation.setName(req.getName());
         presentation.setDescription(req.getDescription());
         presentation.setGroup(group);
@@ -78,8 +81,12 @@ public class PresentationServiceImpl implements PresentationService {
         }
         Presentation presentation = record.get();
         presentation.setName(req.getName());
-        presentation.setDescription(req.getDescription());
-        presentation.setPresentType(req.getType());
+        if(req.getDescription() != null) {
+            presentation.setDescription(req.getDescription());
+        }
+        if(req.getType() != null){
+            presentation.setPresentType(req.getType());
+        }
 
         presentationRepository.save(presentation);
         return presentation;

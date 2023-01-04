@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 public class UpdatePresentationReq {
+    @NotNull(message = "Presentation name cannot be null")
     private String name;
 
     @NotNull(message = "Presentation code cannot be null")
