@@ -27,6 +27,7 @@ CREATE TABLE `edu_group`
     `group_code`        varchar(255) unique NOT NULL,
     `group_description` varchar(255) NULL,
     `capacity`          int,
+    `total_member`      int,
     `status`            varchar(64),
 
     PRIMARY KEY (id)

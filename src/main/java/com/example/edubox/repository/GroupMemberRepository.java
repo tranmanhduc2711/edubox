@@ -39,4 +39,6 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Intege
 
     @Query("SELECT g.roleType FROM GroupMember g WHERE g.status = 'A' AND g.group.groupCode = :groupCode AND g.user = :user")
     ERoleType getUserRoleType(String groupCode,User user);
+
+    GroupMember findGroupMemberByGroupAndRoleTypeAndStatus(Group group,ERoleType roleType, ECommonStatus status);
 }

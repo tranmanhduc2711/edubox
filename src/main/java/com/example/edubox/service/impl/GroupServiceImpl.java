@@ -76,7 +76,7 @@ public class GroupServiceImpl implements GroupService {
                 .stream()
                 .map(group -> {
                     User userTmp = groupMemberRepository.getGroupOwner(group.getGroupCode());
-                    return GroupRes.valueOf(group, UserRes.valueOf(user));
+                    return GroupRes.valueOf(group, UserRes.valueOf(userTmp));
                 }).collect(Collectors.toList());
     }
 
@@ -178,6 +178,9 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public boolean assignToGroup(JoinGroupReq joinGroupReq) {
         Group group = this.findActiveGroup(joinGroupReq.getGroupCode());
+        if(group.getTotalMember().equals(group.getCapacity())) {
+            throw new BusinessException(ErrorCode.GROUP_IS_FULL,"Group is full");
+        }
         User user = userService.findByUsername(joinGroupReq.getEmail());
         Optional<User> member = groupMemberRepository.findMember(joinGroupReq.getGroupCode(), user.getCode());
         if (member.isPresent()) {
@@ -199,6 +202,10 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public String joinByLink(JoinGroupReq joinGroupReq) {
         Group group = this.findActiveGroup(joinGroupReq.getGroupCode());
+        if(group.getTotalMember().equals(group.getCapacity())) {
+            throw new BusinessException(ErrorCode.GROUP_IS_FULL,"Group is full");
+        }
+
         String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByUsername(principal);
         Optional<User> member = groupMemberRepository.findMember(joinGroupReq.getGroupCode(), user.getCode());
@@ -207,6 +214,7 @@ public class GroupServiceImpl implements GroupService {
             return null;
         }
         group.incr(1);
+
         groupRepository.save(group);
 
         GroupMember groupMember = new GroupMember();

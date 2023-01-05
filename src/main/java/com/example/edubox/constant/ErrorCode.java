@@ -26,6 +26,7 @@ public enum ErrorCode {
     // group
     GROUP_CODE_NOT_FOUND(400201),
     GROUP_IS_INACTIVE(400202),
+    GROUP_IS_FULL(400203),
 
     // group member
     GROUP_MEMBER_IS_OUT(400301),

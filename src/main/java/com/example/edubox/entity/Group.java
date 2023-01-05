@@ -38,11 +38,14 @@ public class  Group implements Serializable {
     @Column(name = "capacity")
     private Integer capacity;
 
+    @Column(name = "total_member")
+    private Integer totalMember;
+
     @Column(name = "status")
     @Convert(converter = ECommonStatus.Converter.class)
     private ECommonStatus status=ECommonStatus.ACTIVE;
 
     public void incr(int val) {
-        this.capacity += val;
+        this.totalMember += val;
     }
 }
