@@ -27,6 +27,7 @@ public class Slide implements Serializable {
     private String paragraph;
 
     @Column(name = "type")
+    @Convert(converter = ESlideType.Converter.class)
     private ESlideType slideType;
 
     @OneToOne(targetEntity = Presentation.class, fetch = FetchType.EAGER)
