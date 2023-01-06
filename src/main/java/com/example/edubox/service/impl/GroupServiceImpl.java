@@ -54,6 +54,7 @@ public class GroupServiceImpl implements GroupService {
         group.setDescription(createGroupReq.getDescription());
         group.setStatus(ECommonStatus.ACTIVE);
         group.setCapacity(createGroupReq.getCapacity());
+        group.setTotalMember(0);
         groupRepository.save(group);
 
         String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -206,10 +207,9 @@ public class GroupServiceImpl implements GroupService {
             throw new BusinessException(ErrorCode.GROUP_IS_FULL,"Group is full");
         }
 
-        String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userService.findByUsername(principal);
-        Optional<User> member = groupMemberRepository.findMember(joinGroupReq.getGroupCode(), user.getCode());
-        if (member.isPresent()) {
+        User member = userService.findByUsername(joinGroupReq.getEmail());
+        Optional<User> grMember = groupMemberRepository.findMember(joinGroupReq.getGroupCode(), member.getCode());
+        if (grMember.isPresent()) {
             throw new BusinessException(ErrorCode.USER_IS_ALREADY_IN_GROUP,"User is already in group");
         }
         group.incr(1);
@@ -218,7 +218,7 @@ public class GroupServiceImpl implements GroupService {
 
         GroupMember groupMember = new GroupMember();
         groupMember.setGroup(group);
-        groupMember.setUser(user);
+        groupMember.setUser(member);
         groupMember.setRoleType(ERoleType.MEMBER);
         groupMember.setStatus(ECommonStatus.ACTIVE);
         groupMemberRepository.save(groupMember);
