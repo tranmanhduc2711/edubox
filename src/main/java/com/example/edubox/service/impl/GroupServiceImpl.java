@@ -200,7 +200,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public String joinByLink(JoinGroupReq joinGroupReq) {
+    public void joinByLink(JoinGroupReq joinGroupReq) {
         Group group = this.findActiveGroup(joinGroupReq.getGroupCode());
         if(group.getTotalMember().equals(group.getCapacity())) {
             throw new BusinessException(ErrorCode.GROUP_IS_FULL,"Group is full");
@@ -210,8 +210,7 @@ public class GroupServiceImpl implements GroupService {
         User user = userService.findByUsername(principal);
         Optional<User> member = groupMemberRepository.findMember(joinGroupReq.getGroupCode(), user.getCode());
         if (member.isPresent()) {
-            //throw new BusinessException(ErrorCode.USER_IS_ALREADY_IN_GROUP,"User is already in group");
-            return null;
+            throw new BusinessException(ErrorCode.USER_IS_ALREADY_IN_GROUP,"User is already in group");
         }
         group.incr(1);
 
@@ -223,7 +222,6 @@ public class GroupServiceImpl implements GroupService {
         groupMember.setRoleType(ERoleType.MEMBER);
         groupMember.setStatus(ECommonStatus.ACTIVE);
         groupMemberRepository.save(groupMember);
-        return group.getGroupCode();
     }
 
     @Override

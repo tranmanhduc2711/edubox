@@ -33,7 +33,7 @@ public interface GroupService {
 
     boolean assignToGroup(JoinGroupReq joinGroupReq);
 
-    String joinByLink(JoinGroupReq joinGroupReq);
+    void joinByLink(JoinGroupReq joinGroupReq);
 
     void deleteMember(DeleteMemberReq req);
 }

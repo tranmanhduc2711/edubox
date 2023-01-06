@@ -63,8 +63,9 @@ public class GroupController extends BaseController {
     }
 
     @PostMapping("/join")
-    public String joinByLink(@RequestBody JoinGroupReq joinGroupReq) {
-        return groupService.joinByLink(joinGroupReq);
+    public ResponseEntity<?> joinByLink(@RequestBody JoinGroupReq joinGroupReq) {
+        groupService.joinByLink(joinGroupReq);
+        return success(null);
     }
 
 
