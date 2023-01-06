@@ -40,15 +40,29 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new BusinessException(ErrorCode.USER_NOT_FOUND,"User not found")
-        );
-        if (user == null) {
-            throw new BusinessException(ErrorCode.USER_NOT_FOUND, "User not found");
-        }
-        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        boolean accountNonExpired = true;
+        boolean credentialsNonExpired = true;
+        boolean accountNonLocked = true;
+        try {
+            User user = userRepository.findByUsername(username).orElseThrow(
+                    () -> new BusinessException(ErrorCode.USER_NOT_FOUND, "User not found")
+            );
+            if (user == null) {
+                throw new BusinessException(ErrorCode.USER_NOT_FOUND, "User not found");
+            }
+            Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
+            return new org.springframework.security.core.userdetails.User(
+                    user.getUsername(),
+                    user.getPassword(),
+                    user.getIsEnabled().booleanValue(),
+                    accountNonExpired,
+                    credentialsNonExpired,
+                    accountNonLocked,
+                    new ArrayList<>());
+        }catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
