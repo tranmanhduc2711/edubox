@@ -207,7 +207,8 @@ public class GroupServiceImpl implements GroupService {
             throw new BusinessException(ErrorCode.GROUP_IS_FULL,"Group is full");
         }
 
-        User member = userService.findByUsername(joinGroupReq.getEmail());
+        String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User member = userService.findByUsername(principal);
         Optional<User> grMember = groupMemberRepository.findMember(joinGroupReq.getGroupCode(), member.getCode());
         if (grMember.isPresent()) {
             throw new BusinessException(ErrorCode.USER_IS_ALREADY_IN_GROUP,"User is already in group");
