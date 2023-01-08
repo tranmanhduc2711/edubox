@@ -40,8 +40,8 @@ public class PresentationServiceImpl implements PresentationService {
     private SequenceService sequenceService;
 
     @Override
-    public List<PresentationRes> getPresentations(EPresentType type, String code) {
-        List<Presentation> presentations= presentationRepository.findPresentations(type, code);
+    public List<PresentationRes> getPresentations(EPresentType type, String code, String groupCode) {
+        List<Presentation> presentations= presentationRepository.findPresentations(type,code,groupCode);
         if(CollectionUtils.isEmpty(presentations)){
             return null;
         } else {

@@ -11,7 +11,8 @@ import java.util.List;
 public interface PresentationService {
     List<PresentationRes> getPresentations(
             EPresentType type,
-            String code);
+            String code,
+            String groupCode);
 
     PresentationRes create(CreatePresentationReq req);
 

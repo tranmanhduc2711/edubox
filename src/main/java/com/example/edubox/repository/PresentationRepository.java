@@ -13,8 +13,9 @@ import java.util.Optional;
 public interface PresentationRepository extends JpaRepository<Presentation, Integer> {
     @Query("SELECT p FROM Presentation p WHERE p.status = 'A' AND" +
             " ( p.presentType = :presentType OR :presentType IS NULL ) AND " +
-            " ( p.code = :code OR :code IS NULL)")
-    List<Presentation> findPresentations(EPresentType presentType, String code);
+            " ( p.code = :code OR :code IS NULL) AND " +
+            " ( p.group.groupCode = :groupCode OR :groupCode IS NULL)")
+    List<Presentation> findPresentations(EPresentType presentType, String code,String groupCode);
 
     Optional<Presentation> findByCode(String code);
 

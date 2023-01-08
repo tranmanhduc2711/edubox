@@ -20,8 +20,10 @@ public class PresentationController extends BaseController {
 
     @GetMapping("")
     ResponseEntity<?> getPresentations(@RequestParam(value = "type", required = false) EPresentType type,
-                                       @RequestParam(value = "code", required = false) String code) {
-        return success(presentationService.getPresentations(type, code));
+                                       @RequestParam(value = "code", required = false) String code,
+                                       @RequestParam(value = "groupCode", required = false) String groupCode) {
+
+        return success(presentationService.getPresentations(type, code,groupCode));
     }
 
     @PostMapping("")
@@ -38,6 +40,7 @@ public class PresentationController extends BaseController {
     ResponseEntity<?> update(@RequestBody @Valid UpdatePresentationReq req) {
         return success(presentationService.update(req));
     }
+
 
     @GetMapping("/check-host")
     ResponseEntity<?> checkIsPresentationHost(@RequestParam(value = "presentCode", required = true) String code) {
