@@ -28,7 +28,6 @@ public class UserRes {
                 .email(user.getEmail())
                 .gender(user.getGender())
                 .age(user.getAge())
-                .role(user.getRole())
                 .code(user.getCode())
                 .status(user.getStatus())
                 .build();

@@ -31,6 +31,10 @@ public class UserController extends BaseController {
         return success(user);
     }
 
+    @GetMapping("/getme")
+    ResponseEntity<?> getAccountProfile() {
+        return  success(UserRes.valueOf(userService.getAccountProfile()));
+    }
     @PostMapping("/update")
     ResponseEntity<?> updateUserProfile(@RequestBody UpdateUserReq updateUserReq) {
         return success(userService.updateUser(updateUserReq));

@@ -16,6 +16,7 @@ import com.example.edubox.service.UserService;
 import com.example.edubox.util.Strings;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -124,6 +125,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.findByUsername(user.getUsername()).orElseThrow(
                 () -> new BusinessException(ErrorCode.USER_NOT_FOUND,"User not found")
         );
+    }
+
+    @Override
+    public User getAccountProfile() {
+        String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return findByUsername(principal);
     }
 
     @Override
