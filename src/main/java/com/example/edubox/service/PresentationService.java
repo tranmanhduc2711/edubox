@@ -23,4 +23,7 @@ public interface PresentationService {
     Presentation findActive(String code);
 
     Boolean checkIsHost(String presentCode);
+
+    void start(String presentCode);
+    void end(String presentCode);
 }

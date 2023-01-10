@@ -88,6 +88,7 @@ CREATE TABLE `presentation`
     `host_id`     int          NOT NULL,
     `total_slide` int,
     `status`      varchar(64),
+    `is_running`  int default 0,
     `created_at`  datetime DEFAULT NULL,
 
     PRIMARY KEY (id),
