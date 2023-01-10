@@ -68,6 +68,7 @@ public class PresentationServiceImpl implements PresentationService {
         presentation.setGroup(group);
         presentation.setHost(user);
         presentation.setTotalSlide(0);
+        presentation.setIsRunning(Boolean.FALSE);
         presentation.setStatus(ECommonStatus.ACTIVE);
         presentationRepository.save(presentation);
         return PresentationRes.valueOf(presentation);
@@ -123,6 +124,20 @@ public class PresentationServiceImpl implements PresentationService {
         String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByUsername(principal);
         return user.getUsername().equals(presentation.getHost().getUsername());
+    }
+
+    @Override
+    public void start(String presentCode) {
+        Presentation presentation = findActive(presentCode);
+        presentation.setIsRunning(Boolean.TRUE);
+        presentationRepository.save(presentation);
+    }
+
+    @Override
+    public void end(String presentCode) {
+        Presentation presentation = findActive(presentCode);
+        presentation.setIsRunning(Boolean.FALSE);
+        presentationRepository.save(presentation);
     }
 
     private String buildPresentationCode() {

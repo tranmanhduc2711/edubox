@@ -17,6 +17,7 @@ public class PresentationRes {
     private String groupName;
     private UserRes host;
     private int totalSlide;
+    private Boolean isRunning;
     private LocalDateTime createdAt;
 
     public static PresentationRes valueOf(Presentation presentation) {
@@ -28,6 +29,7 @@ public class PresentationRes {
                 .groupName(presentation.getGroup().getGroupName())
                 .host(UserRes.valueOf(presentation.getHost()))
                 .totalSlide(presentation.getTotalSlide())
+                .isRunning(presentation.getIsRunning())
                 .createdAt(presentation.getCreatedAt())
                 .build();
 

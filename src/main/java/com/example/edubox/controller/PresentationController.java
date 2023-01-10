@@ -46,4 +46,14 @@ public class PresentationController extends BaseController {
     ResponseEntity<?> checkIsPresentationHost(@RequestParam(value = "presentCode", required = true) String code) {
         return success(presentationService.checkIsHost(code));
     }
+    @GetMapping("/start")
+    ResponseEntity<?> startPresentation(@RequestParam(value = "presentCode", required = true) String code) {
+        presentationService.start(code);
+        return success(null);
+    }
+    @GetMapping("/end")
+    ResponseEntity<?> endPresentation(@RequestParam(value = "presentCode", required = true) String code) {
+        presentationService.end(code);
+        return success(null);
+    }
 }

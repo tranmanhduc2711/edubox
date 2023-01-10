@@ -44,6 +44,9 @@ public class Presentation implements Serializable {
     @Column(name = "total_slide")
     private Integer totalSlide = 0;
 
+    @Column(name = "is_running")
+    private Boolean isRunning;
+
     @Column(name = "status")
     @Convert(converter = ECommonStatus.Converter.class)
     private ECommonStatus status = ECommonStatus.ACTIVE;
