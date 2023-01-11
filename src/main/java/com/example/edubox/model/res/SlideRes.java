@@ -22,6 +22,9 @@ public class SlideRes {
     private List<SlideChoiceRes> choices;
 
     public static SlideRes valueOf(Slide slide, List<SlideChoiceRes> choices){
+        if(slide.getSlideType().equals(ESlideType.HEADING) || slide.getSlideType().equals(ESlideType.PARAGRAPH)) {
+            choices = null;
+        }
         return SlideRes.builder()
                 .itemNo(slide.getItemNo())
                 .type(slide.getSlideType())
