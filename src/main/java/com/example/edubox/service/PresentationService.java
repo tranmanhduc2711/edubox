@@ -25,5 +25,6 @@ public interface PresentationService {
     Boolean checkIsHost(String presentCode);
 
     void start(String presentCode);
+
     void end(String presentCode);
 }
