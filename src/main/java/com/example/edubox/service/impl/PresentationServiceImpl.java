@@ -3,6 +3,7 @@ package com.example.edubox.service.impl;
 import com.example.edubox.constant.ECommonStatus;
 import com.example.edubox.constant.EPresentType;
 import com.example.edubox.constant.ErrorCode;
+import com.example.edubox.entity.Collaborator;
 import com.example.edubox.entity.Group;
 import com.example.edubox.entity.Presentation;
 import com.example.edubox.entity.User;
@@ -10,6 +11,7 @@ import com.example.edubox.exception.BusinessException;
 import com.example.edubox.model.req.CreatePresentationReq;
 import com.example.edubox.model.req.UpdatePresentationReq;
 import com.example.edubox.model.res.PresentationRes;
+import com.example.edubox.repository.CollaboratorRepository;
 import com.example.edubox.repository.PresentationRepository;
 import com.example.edubox.service.GroupService;
 import com.example.edubox.service.PresentationService;
@@ -31,6 +33,8 @@ public class PresentationServiceImpl implements PresentationService {
     private static final String PRESENTATION_CODE = "presentation-code-";
     @Autowired
     private PresentationRepository presentationRepository;
+    @Autowired
+    private CollaboratorRepository collaboratorRepository;
     @Autowired
     private GroupService groupService;
     @Autowired
@@ -128,17 +132,40 @@ public class PresentationServiceImpl implements PresentationService {
 
     @Override
     public void start(String presentCode) {
+        String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByUsername(principal);
+
         Presentation presentation = findActive(presentCode);
+        checkPresentPermission(presentation,user);
         presentation.setIsRunning(Boolean.TRUE);
         presentationRepository.save(presentation);
     }
 
     @Override
     public void end(String presentCode) {
+        String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByUsername(principal);
+
         Presentation presentation = findActive(presentCode);
+        checkPresentPermission(presentation,user);
         presentation.setIsRunning(Boolean.FALSE);
         presentationRepository.save(presentation);
     }
+
+    private void checkPresentPermission(Presentation presentation,User user){
+        boolean isDenied = false;
+        List<Collaborator> collaborators = collaboratorRepository.getCollaboratorByPresentationAndStatus(presentation,ECommonStatus.ACTIVE);
+        isDenied = collaborators
+                .stream()
+                .noneMatch(item -> (item.getCollaborator().getUsername().equals(user.getUsername())));
+        if(presentation.getHost().getUsername().equals(user.getUsername())) {
+            isDenied = false;
+        }
+        if(isDenied) {
+            throw new BusinessException(ErrorCode.ACCESS_DENIED,"Access denied");
+        }
+    }
+
 
     private String buildPresentationCode() {
         int yy = LocalDate.now().getYear() % 100;
