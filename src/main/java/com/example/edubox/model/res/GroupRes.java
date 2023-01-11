@@ -19,6 +19,7 @@ public class GroupRes {
     private String description;
     private Integer capacity;
     private ECommonStatus status;
+    private int total;
     private UserRes owner;
 
     public static GroupRes valueOf(Group group,UserRes owner) {
@@ -28,6 +29,7 @@ public class GroupRes {
                 .description(group.getDescription())
                 .capacity(group.getCapacity())
                 .status(group.getStatus())
+                .total(group.getTotalMember())
                 .owner(owner)
                 .build();
     }
