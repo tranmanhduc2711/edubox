@@ -6,18 +6,6 @@ server:
 spring:
   application:
     name: edu-box
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: 641698382512-lqecq5tolp96hmpntdub2en2a2hvvsmm.apps.googleusercontent.com
-            client-secret: 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
-            redirectUri: "{baseUrl}/oauth2/callback/{registration}"
-            scope:
-              - email
-              - google
-
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
