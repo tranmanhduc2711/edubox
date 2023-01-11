@@ -43,7 +43,7 @@ public class MailServiceImpl implements MailService {
 
         String recipientAddress = user.getEmail();
         String subject = "Registration Confirmation";
-        String confirmationUrl = "edu/registration/confirm?token=" + token;
+        String confirmationUrl = "/edu/registration/confirm?token=" + token;
 
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
